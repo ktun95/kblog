@@ -1,0 +1,40 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+
+html, body {
+    /* overflow: hidden; */
+    height: 100vh;
+    width: 100vw;
+    font-family: "Roboto";
+}
+
+#app {
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* #content-container {
+    height: 50vh;
+    overflow: scroll;
+    position: fixed; 
+} */
+
+#map {
+    height: 50vh;
+    flex-grow: 1;
+}
+
+.test-image {
+    width: 100%;
+    height: auto
+}
+
+.MuiAccordion-root.Mui-expanded {
+    margin: 0px !important;
+}

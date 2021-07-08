@@ -1,9 +1,10 @@
 const isDev = (process.env.NODE_ENV === 'development')
-
+console.log(isDev)
+// console.log(process.env.NODE_ENV)
 module.exports = {
     mode: isDev ? 'development' : 'production',
     entry: [
-      '@babel/polyfill', // enables async-await
+      // 'core-js/stable',
       './client/index.js'
     ],
     output: {

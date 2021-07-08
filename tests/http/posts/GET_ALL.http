@@ -1,0 +1,2 @@
+GET http://localhost:3030/api/posts/all HTTP/1.1
+content-type: application/json

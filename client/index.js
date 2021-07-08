@@ -1,7 +1,12 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import { Main } from './components';
+
 
 ReactDOM.render(
-    <h1>React App</h1>,
+    <Main />,
     document.getElementById('app')
 )
+
+window.scrollTo(0,1);

@@ -1,0 +1,9 @@
+POST http://localhost:3030/api/posts/ HTTP/1.1
+content-type: application/json
+
+{
+    "title": "A Spring Afternoon In Seoul",
+    "text": "Meticulous ladies prepared us some delicious marinated crab and shrimp and superb sides!",
+    "location": ""
+}
+
