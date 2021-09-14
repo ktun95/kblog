@@ -1,5 +1,5 @@
 const isDev = (process.env.NODE_ENV === 'development')
-console.log(isDev)
+console.log('node_env = dev?:', isDev, process.env.NODE_ENV)
 // console.log(process.env.NODE_ENV)
 module.exports = {
     mode: isDev ? 'development' : 'production',

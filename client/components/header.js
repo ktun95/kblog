@@ -14,11 +14,16 @@ const useStyles = makeStyles({
     }
 })
 
-export const Header = () => {
+export const Header = (props) => {
     const classes = useStyles()
+    
+    const handleClick = () => {
+        props.toggleWriteMode()
+    }
 
     return (
         <div className={classes.header}>
+            <button onClick={handleClick}>=</button>
             <div className={classes.titleAdjacent}></div>
             <h1 className={classes.blogTitle}> Kady's Travels </h1>
             <div className={classes.titleAdjacent}>instagram: @kadylam_</div>

@@ -1,9 +1,15 @@
 const express = require('express')
 const router = express.Router()
-const Client = require('../db')
-
+const { mongoClient } = require('../db')
+// Client.connect()
 //put connection check middleware here?
 // MongoClient instance has an isConnected method 
+
+// router.use((req, res, next)=> {
+//     Client.connect()
+//     next()
+// }) 
+
 // router.use((req, res, next) => {
 //     try {
 //         if (Client.isConnected()) {
@@ -18,10 +24,12 @@ const Client = require('../db')
 
 router.get('/all', async (req, res, next) => {
     try {
-        const posts = await Client.db('tintin').collection('posts')
-        const findResult = await posts.find()
+        // const db = await getDb()
+        const posts =  await req.db.collection('posts')
+        const findResult = posts.find()
         const allPosts = await findResult.toArray()
-        res.send(allPosts)
+        console.log(allPosts)
+        res.json(allPosts)
     } catch (err) {
         next(err)
     }
@@ -30,7 +38,7 @@ router.get('/all', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
     const id = req.params.id
     try {
-        const posts = await Client.db('tintin').collection('posts')
+        const posts = await req.db.collection('posts')
         const findOneResult = await posts.findOne(id)
         
     } catch (err) {
@@ -38,7 +46,9 @@ router.get('/:id', async (req, res, next) => {
     }
 })
 
+//fix this
 router.post('/', async (req, res, next) => {
+    if (!!req.user) req.status(401).send('Unauthorized request')
     const newDoc = req.body
     try {
         const db = Client.db("tintin")
@@ -50,5 +60,10 @@ router.post('/', async (req, res, next) => {
         next(err)
     }
 })
+
+// router.use((req, res, next) => {
+//     Client.close()
+// })
+
 
 module.exports = router;

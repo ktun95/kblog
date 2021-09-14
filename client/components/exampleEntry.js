@@ -1,16 +1,18 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/styles'
+import { AdjustableImage } from '.'
+// import { createEntryObject, Entry } from '../interfaces/entry'
 
 const useStyles = makeStyles({
     testImage: {
-        width: "100%",
-        height: "auto"
+        // width: "100%",
+        // height: "auto"
     }
 })
 
 export const ExampleEntry = () => {
     return (
-        <React.Fragment>
+        <div contentEditable="true">
             <time datetime="2021-07-03 20:00">July 3, 2021</time>
             <p>
             Haenyeo (also spelled haenyo) (Hangul: 해녀; lit. "sea women") are female divers in the Korean province 
@@ -18,7 +20,7 @@ export const ExampleEntry = () => {
             the ocean. Known for their independent spirit, iron will and determination, haenyeo are representative of 
             the semi-matriarchal family structure of Jeju. </p>
 
-            <img className="test-image" src="/images/test/tree.jpg"></img>
+            <AdjustableImage className="test-image" src="/images/test/tree.jpg" />
             
             <p> Jeju's diving tradition dates back to 434 AD.[2]:100 Originally, diving was an exclusively male profession,
             with the exception of women who worked alongside their husbands.[2]:101 The first mention of female divers 
@@ -49,6 +51,6 @@ export const ExampleEntry = () => {
             continued long after Japanese colonization. In the early 1960s, for example, haenyeo harvests accounted 
             for 60% of Jeju's fisheries revenue, and 40% of haenyeo husbands remained unemployed.[2][5]
             </p>
-        </React.Fragment>
+        </div>
     )
 }

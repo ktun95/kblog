@@ -17,6 +17,8 @@ export const Map = (props) => { // {places, setSelected}
         placesArray.forEach((p) => {
             //The latitude and longitude in the places object in stored as a string in MongoDB
             //but the marker method takes an array of nums, I think. So, we parse.
+            if (!p.hasOwnProperty('coordinates')) return;
+            
             const coordinates = p.coordinates.map((latlong) => {
                 return parseFloat(latlong)
             })

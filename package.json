@@ -9,7 +9,7 @@
     "build-watch": "webpack -w",
     "start": "cross-env NODE_ENV=production&&webpack -w&&nodemon server -e html,js,scss,css",
     "start-dev": "cross-env NODE_ENV=development&&npm-run-all --parallel watch:server watch:build",
-    "watch:build": "Webpack -w",
+    "watch:build": "Webpack -w --mode development",
     "watch:server": "nodemon server",
     "seed": "node seed.js"
   },
@@ -26,9 +26,13 @@
     "@material-ui/styles": "^4.11.4",
     "axios": "^0.19.2",
     "babel-loader": "^8.2.2",
+    "connect-mongo": "^4.5.0",
     "core-js": "^3.13.1",
     "express": "^4.17.1",
     "express-request-id": "^1.4.1",
+    "express-session": "^1.17.2",
+    "geo-coordinates-parser": "^1.3.2",
+    "jshashes": "^1.0.8",
     "leaflet": "^1.7.1",
     "mocha": "^8.4.0",
     "mongodb": "^3.6.9",
@@ -37,7 +41,8 @@
     "npm-run-all": "^4.1.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-leaflet": "^2.7.0"
+    "react-leaflet": "^2.7.0",
+    "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
     "@testing-library/react": "^11.2.7",

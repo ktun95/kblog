@@ -1,22 +1,38 @@
 import React, { useState, useEffect } from 'react'; 
 import axios from 'axios'
-import { Map, ContentContainer, ExampleEntry, Entry, Header } from '.';
+import { Map,
+         ContentContainer,
+         ExampleEntry,
+         Entry,
+         Header,
+         Write } from '.';
 import { SwipeableDrawer, 
          Accordion,
          AccordionSummary,
          AccordionDetails } from '@material-ui/core';
 
 export const Main = () => {
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-    const [places, setPlaces] = useState([])
-    const [selected, setSelected] = useState({})
     const [showMap, setShowMap] = useState(true)
-    
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+    const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const [selected, setSelected] = useState({})
+    const [isWriteMode, setIsWriteMode] = useState(false)
+    const [places, setPlaces] = useState([])
+
     const toggleMap = (bool) => {
         setShowMap(bool)
     }
+
     const toggleDrawer = (bool) => {
         setIsDrawerOpen(bool)
+    }
+
+    const toggleMenu = () => {
+        setIsMenuOpen(!isMenuOpen)
+    }
+
+    const toggleWriteMode = () => {
+        setIsWriteMode(!isWriteMode)
     }
 
     useEffect(() => {
@@ -44,7 +60,8 @@ export const Main = () => {
     return(
         <React.Fragment>
             {/* <div onClick={() => toggleDrawer(true)}>open drawer</div> */}
-            <Header />
+            <Header toggleWriteMode={toggleWriteMode} />
+            
             <Accordion>
                 <AccordionSummary expandIcon={<span>V</span>}>
                     MAP
@@ -55,12 +72,12 @@ export const Main = () => {
             </Accordion>
             {/* <Map places={places} showMap={showMap} /> */}
             <ContentContainer>
-                {Object.keys(selected).length ? <Entry selected={selected}/> : <ExampleEntry />}
+                {isWriteMode ? <Write /> : Object.keys(selected).length ? <Entry selected={selected}/> : <ExampleEntry />}
             </ContentContainer>
-            <SwipeableDrawer open={isDrawerOpen}>
+            {/* <SwipeableDrawer open={isDrawerOpen}>
                 <div onClick={() => toggleDrawer(false)}>
                 </div>
-            </SwipeableDrawer>
+            </SwipeableDrawer> */}
         </React.Fragment>
     )
 };
