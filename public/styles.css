@@ -34,10 +34,10 @@ input[type="file"] {
     flex-grow: 1;
 }
 
-.test-image {
+/* .test-image {
     width: 100%;
     height: auto
-}
+} */
 
 .MuiAccordion-root.Mui-expanded {
     margin: 0px !important;

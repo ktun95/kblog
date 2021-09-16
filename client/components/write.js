@@ -121,8 +121,8 @@ export const Write = (props) => {
             <div id="text-input" contentEditable="true" ref={inputSpace}>
                 <p>...</p>
             </div>
-            {/* <button onClick={toggleImageEditor} className={classes.save}/> */}
-            <input type="button" onClick={saveEntry} className={classes.save}></input>
+            <button onClick={toggleImageEditor} className={classes.save}/>
+            {/* <input type="button" onClick={saveEntry} className={classes.save}></input> */}
             {/* <label htmlFor="file-upload" className={classes.fileUpload}>
                 <input type="file" id="file-upload" accept="image/*" onChange={handleFileChange} multiple></input>
             </label> */}

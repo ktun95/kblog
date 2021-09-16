@@ -12,7 +12,7 @@ const useStyles = makeStyles({
 
 export const ExampleEntry = () => {
     return (
-        <div contentEditable="true">
+        <div>
             <time datetime="2021-07-03 20:00">July 3, 2021</time>
             <p>
             Haenyeo (also spelled haenyo) (Hangul: 해녀; lit. "sea women") are female divers in the Korean province 

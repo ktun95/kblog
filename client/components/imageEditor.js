@@ -72,14 +72,24 @@ export const ImageEditor = props => { //srcImage, maybe viewport size
         </React.Fragment>
     )
     //render the source image behind the frame
-    //  the source image should be able to be translated and scaled by the user
+    // the source image should be able to be translated
+        // [x] and scaled by the user
     // on confirmation, return an appropriately cropped and scaled version of the source image to the parent component, which should then create an img element in the correct place  
 }
 
 const EditorFrame = props => {
-    const {aspectRatio} = props
+    const {aspectRatio, src} = props
     const width = window.innerWidth * .9
     const height = width * aspectRatio[1] / aspectRatio[0]
+    const viewPane = useRef(null)
+    
+    useEffect(() => { //can this adaptable to window resizing for desktop?
+        console.log(`setting viewPane dimensions | width: ${width}, height: ${height}`)
+        console.dir(viewPane.current)
+        viewPane.current.style.width = width;
+        viewPane.current.style.height = height;
+    }, [aspectRatio])
+
     return (
         <div
             style={{
@@ -88,23 +98,31 @@ const EditorFrame = props => {
                 left: "0",
                 right: "0",
                 bottom: "0",
-                height: "100vh",
+                height: "70vh",
                 width:  "100vw",
-                opacity: "10%",
-                backgroundColor: "black"
+                overflow: 'hidden'
+                // opacity: "10%",
+                // backgroundColor: "black"
             }
         }>
             <div 
-                id="editor-window"
+                id="view-pane"
+                ref={viewPane}
                 style={{
-                        height:`${height}`,
-                        width: `${width}`,
-                        opacity: "50%",
-                        backgroundColor: "green"
+                        position: "absolute",
+                        zIndex: "3",
+                        backgroundColor: "green",
+                        margin: "auto",
+                        top: "3rem",
+                        height: `${height}px`,
+                        width: `${width}px`,
+                        // opacity: "50%",
+                        // backgroundColor: "green",
+                        boxShadow: '5px 5px 0px 1000px, -5px 5px 0px 1000px, 5px -5px 0px 1000px, -5px -5px 0px 1000px'
                     }
                 }
             >
-            <AdjustableImage /> 
+            <AdjustableImage src={"/images/test/tree.jpg"}/> 
             </div>
         
         </div>
@@ -118,81 +136,68 @@ const EditorControls = props => {
 }
 
 export const AdjustableImage = props => {
-    const [sizeChange, setSizeChange] = useState(0)
     const imageRef = useRef(null)
     const {src} = props
-    
-    const eventCache = []
+
     let prevDiff = -1
-    let originalAspectRatio;
+    let originalAspectRatio, originalX, originalY;
 
     useEffect(() => {
         originalAspectRatio = imageRef.current.width / imageRef.current.height 
-    })
+        // originalX = imageRef.current.X
+        // originalY = imageRef.current.Y
+    }, [])
 
-    const handlePointerDown = e => {
-        console.log('pointerDown', e)
-        eventCache.push(e)
-        console.log('pushing to eventCache ', eventCache.length)
+    const handleTouchStart = e => {
+        console.log(e.touches)
+        if (e.touches.length == 2) {
+            e.target.style.opacity = '50%'
+            prevDiff = Math.abs(e.touches[0].clientX - e.touches[1].clientX)
+        }
     }
 
-    const handlePointerMove  = e => {
-        console.log('Event Cache: ', eventCache)
-        console.log('pointerMove', e)
-        //not sure what the point of this is
-        // from mozilla.org: "Find this event in the cache and update its record with this event"
-        for (let i = 0; i < eventCache.length; i++) {
-            if (e.pointerId == eventCache[i].pointerId) {
-                console.log('updating pointer move event')
-                eventCache[i] = e
-                break;
-            }
+    const handleTouchMove = e => {
+        if (e.touches.length == 1) { 
+            
         }
 
-        if (eventCache.length == 2) {
-            e.target.styles.border = "red"
-            const currentDiff = Math.abs(eventCache[0].clientX - eventCache[1].clientX);
+        if (e.touches.length == 2) {
+            //find difference of touch event clientX values
+            let currentDiff = Math.abs(e.touches[0].clientX - e.touches[1].clientX)
             if (prevDiff > 0) {
-                if (prevDiff < currentDiff) { //pinch OUT
-                    console.log(currentDiff)
-                    e.target.width+= currentDiff
-                    e.target.height = e.target.width / originalAspectRatio
-                } 
-                if (prevDiff > currentDiff) {// pinch IN
-                    console.log(currentDiff)
-                    e.target.width-= currentDiff
-                    e.target.height = e.target.width / originalAspectRatio
+                //add or subtract the magnitude of the difference to the width of the image
+                if (prevDiff < currentDiff) {
+                    // pinch OUT, ADD
+                    e.target.width+= currentDiff - prevDiff
                 }
+                if (prevDiff > currentDiff) {
+                    e.target.width-=  prevDiff - currentDiff
+                    // pinch IN, SUBTRACT
+                }
+                // adjust height proportionately 
+                e.target.height = e.target.width / originalAspectRatio
             }
             prevDiff = currentDiff
         }
+        //
     }
 
-    const handlePointerUp = e => {
-        console.log('pointerUp', e)
-        for (let i = 0; i < eventCache.length; i++) {
-            if (e.pointerId == eventCache[i].pointerId) {
-                eventCache.splice(i, 1)
-                break;
-            }
-        }        
-
-        if (eventCache.length < 2) {
-            prevDiff = -1
+    const handleTouchEnd = e => {
+        e.target.style.opacity = '100%'
+        if (e.touches.length < 2) {
+            prevDiff = -1 
         }
     }
 
     return (
         <img
+            // style={{position: "absolute", zIndex: "1"}}
             ref={imageRef}
             {...props}
             src={src}
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-            onPointerCancel={handlePointerUp}
-            onPointerLeave={handlePointerUp}
-            onPointerOut={handlePointerUp}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
         >
             
         </img>
