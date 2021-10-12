@@ -58,8 +58,8 @@ export const Write = (props) => {
             maximumAge: 0
         }}, [])
 
-    const toggleImageEditor = () => {
-        setIsImageEditing(!isImageEditing)
+    const toggleImageEditor = (src) => {
+        setIsImageEditing(src)
     }
 
     const handleInput = e => {
@@ -74,14 +74,18 @@ export const Write = (props) => {
     }
 
     const handleFileChange = e => {
-        console.log(e.target.files[0])
-        const newImage = document.createElement('img')
-        newImage.src = URL.createObjectURL(e.target.files[0])
-        console.log(newImage)
-        inputSpace.current.appendChild(newImage)
+        // console.log(e.target.files[0])
+
+        setIsImageEditing(URL.createObjectURL(e.target.files[0]))
+        // console.log(newImage)
+        // inputSpace.current.appendChild(newImage)
     }
 
-    
+    const createImgElement = src => {
+        const img = document.createElement('img')
+        newImage.src = URL.createObjectURL(src)
+        return img
+    }
 
     const saveEntry = async () => {
         //get strings from title, paragraphs
@@ -121,12 +125,12 @@ export const Write = (props) => {
             <div id="text-input" contentEditable="true" ref={inputSpace}>
                 <p>...</p>
             </div>
-            <button onClick={toggleImageEditor} className={classes.save}/>
+            {/* <button onClick={toggleImageEditor} className={classes.save}/> */}
             {/* <input type="button" onClick={saveEntry} className={classes.save}></input> */}
-            {/* <label htmlFor="file-upload" className={classes.fileUpload}>
+            <label htmlFor="file-upload" className={classes.fileUpload}>
                 <input type="file" id="file-upload" accept="image/*" onChange={handleFileChange} multiple></input>
-            </label> */}
-            {isImageEditing ? <ImageEditor /> : null}
+            </label>
+            {isImageEditing ? <ImageEditor src={isImageEditing} setIsImageEditing={setIsImageEditing}/> : null}
         </React.Fragment>
     )
 } 

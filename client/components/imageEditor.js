@@ -1,4 +1,188 @@
 import React, { useState, useRef, useEffect } from 'react'
+import { makeStyles } from '@material-ui/core'
+
+const useStyles = makeStyles({
+    frameStile: {
+        opacity: "50%",
+        backgroundColor: "black",
+        flexGrow: 1,
+        flexBasis: "auto",
+        borderColor: "rgba(0, 0, 0, 0.3)",
+        borderStyle: "inset",
+        zIndex: "999"
+    }
+})
+
+export const ImageEditor = props => { //srcImage, maybe viewport size
+    const {src} = props
+    const [aspectRatio, setAspectRatio] = useState([4, 3]) //width : height
+    console.log('rendering Image Editor')
+    
+    return (
+        //should render a frame of acceptable dimensions
+        //change this to flexbox
+        <div id="image-editor" style={{position: "fixed", top: "0", left: "0", display: "flex", flexDirection: "column", height: "100vh", width: "100vw"}}>
+            <EditorFrame aspectRatio={aspectRatio} src={src} />
+            <div id="editor-backdrop" style={{position: "fixed", top: "0", left: "0", height: "100vh", width: "100vw", backgroundColor: "grey"}}></div>
+            <EditorControls />
+        </div>
+    )
+    //render the source image behind the frame
+    // the source image should be able to be translated
+        // [x] and scaled by the user
+    // on confirmation, return an appropriately cropped and scaled version of the source image to the parent component, which should then create an img element in the correct place  
+}
+
+const EditorFrame = props => {
+    const {aspectRatio, src} = props
+    const width = window.innerWidth
+    const height = width * aspectRatio[1] / aspectRatio[0]
+    const viewPane = useRef(null)
+    
+    // useEffect(() => { //can this adaptable to window resizing for desktop?
+    //     console.log(`setting viewPane dimensions | width: ${width}, height: ${height}`)
+    //     console.dir(viewPane.current)
+    //     viewPane.current.style.width = width;
+    //     viewPane.current.style.height = height;
+    // }, [aspectRatio])
+
+    const classes = useStyles()
+
+    return (
+        <div id="editor-frame" style={{display: "flex", flexGrow: "1", flexDirection: "column", zIndex: "1", overflow: "hidden"}}>
+            <div id="frame-top" className={classes.frameStile}></div>
+            <div id="frame-middle" style={{display: "flex", flexDirection: "row"}}>
+                <div id="frame-left" className={classes.frameStile}></div>
+                    <div id="view-pane" style={{height: `${height}px`, width: `${width}px`, overflow: "hidden"}}>
+                        <AdjustableImage src={src} width={width} />
+                    </div>
+                <div id="frame-right" className={classes.frameStile}></div>
+            </div>
+            <div id="frame-bottom" className={classes.frameStile}></div>
+        </div>
+    )
+}
+
+const EditorControls = props => {
+    return (
+        null
+    )
+}
+
+export const AdjustableImage = props => {
+    // const [position, setPosition] = useState({left: 0, top: 0})
+    const imageRef = useRef(null)
+    const {src, height, width} = props
+
+    let prevX, prevY;
+    let prevDiff = -1
+    let originalAspectRatio, originalX, originalY;
+    let moveCount = 0
+
+    useEffect(() => {
+        originalAspectRatio = imageRef.current.width / imageRef.current.height 
+        // originalX = imageRef.current.X
+        // originalY = imageRef.current.Y
+    }, [])
+
+    // useEffect(()=> {    
+    //     if (imageRef.current) {
+    //         console.dir(imageRef)
+    //         imageRef.current.addEventListener('touchmove', handleTouchMove, {passive: true})
+    
+    //         return (
+    //             imageRef.current.removeEventListener('touchmove', handleTouchMove)
+    //         )
+    //     }
+    // }, [])
+
+    const handleTouchStart = e => {
+        console.log(e.touches)
+        console.dir(e.target)
+        
+        if (e.touches.length == 1) {
+            prevX = e.touches[0].clientX
+            prevY = e.touches[0].clientY
+            console.log(prevX, prevY)
+        }
+
+        if (e.touches.length == 2) {
+            e.target.style.opacity = '50%'
+            prevDiff = Math.abs(e.touches[0].clientX - e.touches[1].clientX)
+        }
+    }
+
+    const handleTouchMove = e => {
+        e.preventDefault()
+        e.stopPropagation()
+        if (e.touches.length == 1) {
+            console.log('====START=====')
+            console.log('target top: ', e.target.style.top)
+            console.log('cycle: ', moveCount++)
+            
+            console.dir(e.target)  
+            console.log('image current location [e.target.y]: ', e.target.y)
+            console.log('change in touch position: ', e.touches[0].clientY - prevY)
+            const newX = e.target.offsetLeft + e.touches[0].clientX - prevX  
+            const newY = e.target.offsetTop + e.touches[0].clientY - prevY
+            //newcord  = currentImgLocation + (difference in current mvmt pos and last mvmt pos)
+            console.log('calculated new image position', newX)
+            e.target.style.left = `${newX}px`
+            e.target.style.top = `${newY}px`
+            
+            prevX = e.touches[0].clientX
+            prevY = e.touches[0].clientY
+            console.log('====END=====')
+        }
+
+        if (e.touches.length == 2) {
+            //find difference of touch event clientX values
+            let currentDiff = Math.abs(e.touches[0].clientX - e.touches[1].clientX)
+            if (prevDiff > 0) {
+                //add or subtract the magnitude of the difference to the width of the image
+                if (prevDiff < currentDiff) {
+                    // pinch OUT, ADD
+                    e.target.width+= currentDiff - prevDiff
+                }
+                if (prevDiff > currentDiff) {
+                    e.target.width-=  prevDiff - currentDiff
+                    // pinch IN, SUBTRACT
+                }
+                // adjust height proportionately 
+                e.target.height = e.target.width / originalAspectRatio
+            }
+            prevDiff = currentDiff
+        }
+        //
+    }
+
+    const handleTouchEnd = e => {
+        e.target.style.opacity = '100%'
+        if (e.touches.length < 2) {
+            prevDiff = -1 
+        }
+        moveCount = 0
+        // if (e.touches.length < 1) {
+            
+        // }
+    }
+
+    return (
+        <img
+            style={{position: "absolute", zIndex: "1"}}
+            width={width}
+            height={height}
+            ref={imageRef}
+            {...props}
+            src={src}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+        >
+            
+        </img>
+    )
+}
 
 function thisFunctionShoulBeCallByTheFileuploaderButton(e){
     e.preventDefault && e.preventDefault();
@@ -55,151 +239,4 @@ function resizeCrop( src, width, height ){
 function createObjectURL(i){ 
     var URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
     return URL.createObjectURL(i);
-}
-
-
-export const ImageEditor = props => { //srcImage, maybe viewport size
-    const {src} = props
-    const [aspectRatio, setAspectRatio] = useState([4, 3]) //width : height
-    console.log('rendering Image Editor')
-    
-    return (
-        //should render a frame of acceptable dimensions
-        //change this to flexbox
-        <React.Fragment>
-            <EditorFrame aspectRatio={aspectRatio} />
-            <EditorControls />
-        </React.Fragment>
-    )
-    //render the source image behind the frame
-    // the source image should be able to be translated
-        // [x] and scaled by the user
-    // on confirmation, return an appropriately cropped and scaled version of the source image to the parent component, which should then create an img element in the correct place  
-}
-
-const EditorFrame = props => {
-    const {aspectRatio, src} = props
-    const width = window.innerWidth * .9
-    const height = width * aspectRatio[1] / aspectRatio[0]
-    const viewPane = useRef(null)
-    
-    useEffect(() => { //can this adaptable to window resizing for desktop?
-        console.log(`setting viewPane dimensions | width: ${width}, height: ${height}`)
-        console.dir(viewPane.current)
-        viewPane.current.style.width = width;
-        viewPane.current.style.height = height;
-    }, [aspectRatio])
-
-    return (
-        <div
-            style={{
-                position: "fixed",
-                top: "0",
-                left: "0",
-                right: "0",
-                bottom: "0",
-                height: "70vh",
-                width:  "100vw",
-                overflow: 'hidden'
-                // opacity: "10%",
-                // backgroundColor: "black"
-            }
-        }>
-            <div 
-                id="view-pane"
-                ref={viewPane}
-                style={{
-                        position: "absolute",
-                        zIndex: "3",
-                        backgroundColor: "green",
-                        margin: "auto",
-                        top: "3rem",
-                        height: `${height}px`,
-                        width: `${width}px`,
-                        // opacity: "50%",
-                        // backgroundColor: "green",
-                        boxShadow: '5px 5px 0px 1000px, -5px 5px 0px 1000px, 5px -5px 0px 1000px, -5px -5px 0px 1000px'
-                    }
-                }
-            >
-            <AdjustableImage src={"/images/test/tree.jpg"}/> 
-            </div>
-        
-        </div>
-    )
-}
-
-const EditorControls = props => {
-    return (
-        null
-    )
-}
-
-export const AdjustableImage = props => {
-    const imageRef = useRef(null)
-    const {src} = props
-
-    let prevDiff = -1
-    let originalAspectRatio, originalX, originalY;
-
-    useEffect(() => {
-        originalAspectRatio = imageRef.current.width / imageRef.current.height 
-        // originalX = imageRef.current.X
-        // originalY = imageRef.current.Y
-    }, [])
-
-    const handleTouchStart = e => {
-        console.log(e.touches)
-        if (e.touches.length == 2) {
-            e.target.style.opacity = '50%'
-            prevDiff = Math.abs(e.touches[0].clientX - e.touches[1].clientX)
-        }
-    }
-
-    const handleTouchMove = e => {
-        if (e.touches.length == 1) { 
-            
-        }
-
-        if (e.touches.length == 2) {
-            //find difference of touch event clientX values
-            let currentDiff = Math.abs(e.touches[0].clientX - e.touches[1].clientX)
-            if (prevDiff > 0) {
-                //add or subtract the magnitude of the difference to the width of the image
-                if (prevDiff < currentDiff) {
-                    // pinch OUT, ADD
-                    e.target.width+= currentDiff - prevDiff
-                }
-                if (prevDiff > currentDiff) {
-                    e.target.width-=  prevDiff - currentDiff
-                    // pinch IN, SUBTRACT
-                }
-                // adjust height proportionately 
-                e.target.height = e.target.width / originalAspectRatio
-            }
-            prevDiff = currentDiff
-        }
-        //
-    }
-
-    const handleTouchEnd = e => {
-        e.target.style.opacity = '100%'
-        if (e.touches.length < 2) {
-            prevDiff = -1 
-        }
-    }
-
-    return (
-        <img
-            // style={{position: "absolute", zIndex: "1"}}
-            ref={imageRef}
-            {...props}
-            src={src}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-        >
-            
-        </img>
-    )
 }
