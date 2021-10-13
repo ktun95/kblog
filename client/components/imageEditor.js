@@ -81,29 +81,38 @@ export const AdjustableImage = props => {
 
     useEffect(() => {
         originalAspectRatio = imageRef.current.width / imageRef.current.height 
+        console.log("original aspect ratio: ", {image: imageRef.current,
+             height: imageRef.current.height, 
+             width: imageRef.current.width, 
+             aspectRatio: originalAspectRatio})
         // originalX = imageRef.current.X
         // originalY = imageRef.current.Y
     }, [])
 
-    // useEffect(()=> {    
-    //     if (imageRef.current) {
-    //         console.dir(imageRef)
-    //         imageRef.current.addEventListener('touchmove', handleTouchMove, {passive: true})
-    
-    //         return (
-    //             imageRef.current.removeEventListener('touchmove', handleTouchMove)
-    //         )
-    //     }
-    // }, [])
+    useEffect(()=> {    
+        if (imageRef.current) {
+            console.dir(imageRef)
+            imageRef.current.addEventListener('touchstart', handleTouchStart)
+            imageRef.current.addEventListener('touchmove', handleTouchMove, {passive: false})
+            imageRef.current.addEventListener('touchend', handleTouchEnd)
+            
+            return (() => {
+                imageRef.current.removeEventListener('touchstart', handleTouchStart)
+                imageRef.current.removeEventListener('touchmove', handleTouchMove)
+                imageRef.current.removeEventListener('touchend', handleTouchEnd)
+            })
+        }
+    }, [])
 
     const handleTouchStart = e => {
-        console.log(e.touches)
-        console.dir(e.target)
+        console.log('touchSTART')
+        // console.log(e.touches)
+        // console.dir(e.target)
         
         if (e.touches.length == 1) {
             prevX = e.touches[0].clientX
             prevY = e.touches[0].clientY
-            console.log(prevX, prevY)
+            // console.log(prevX, prevY)
         }
 
         if (e.touches.length == 2) {
@@ -113,6 +122,7 @@ export const AdjustableImage = props => {
     }
 
     const handleTouchMove = e => {
+        console.log('touchMOVE')
         e.preventDefault()
         e.stopPropagation()
         if (e.touches.length == 1) {
@@ -149,6 +159,7 @@ export const AdjustableImage = props => {
                     // pinch IN, SUBTRACT
                 }
                 // adjust height proportionately 
+                console.log(e.target.width, originalAspectRatio)
                 e.target.height = e.target.width / originalAspectRatio
             }
             prevDiff = currentDiff
@@ -157,6 +168,7 @@ export const AdjustableImage = props => {
     }
 
     const handleTouchEnd = e => {
+        console.log('touchEND')
         e.target.style.opacity = '100%'
         if (e.touches.length < 2) {
             prevDiff = -1 
@@ -175,9 +187,9 @@ export const AdjustableImage = props => {
             ref={imageRef}
             {...props}
             src={src}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
+            // onTouchStart={handleTouchStart}
+            // onTouchMove={handleTouchMove}
+            // onTouchEnd={handleTouchEnd}
         >
             
         </img>
