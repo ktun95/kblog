@@ -54,7 +54,7 @@ const EditorFrame = props => {
             <div id="frame-middle" style={{display: "flex", flexDirection: "row"}}>
                 <div id="frame-left" className={classes.frameStile}></div>
                     <div id="view-pane" style={{height: `${height}px`, width: `${width}px`, overflow: "hidden"}}>
-                        <AdjustableImage src={src} width={width} />
+                        <AdjustableImage src={src} width={width} /> {/* width prop is passed in */}
                     </div>
                 <div id="frame-right" className={classes.frameStile}></div>
             </div>
@@ -72,6 +72,7 @@ const EditorControls = props => {
 export const AdjustableImage = props => {
     // const [position, setPosition] = useState({left: 0, top: 0})
     const imageRef = useRef(null)
+    //(!)AdjustableImage is not receiving a height prop, which affects the calculation of the originalAspectRatio variable
     const {src, height, width} = props
 
     let prevX, prevY;
@@ -79,17 +80,15 @@ export const AdjustableImage = props => {
     let originalAspectRatio, originalX, originalY;
     let moveCount = 0
 
-    useEffect(() => {
-        originalAspectRatio = imageRef.current.width / imageRef.current.height 
-        console.log("original aspect ratio: ", {image: imageRef.current,
-             height: imageRef.current.height, 
-             width: imageRef.current.width, 
-             aspectRatio: originalAspectRatio})
-        // originalX = imageRef.current.X
-        // originalY = imageRef.current.Y
-    }, [])
-
-    useEffect(()=> {    
+    // useEffect(() => {
+    //     console.log("original aspect ratio: ", {image: imageRef.current,
+    //         clientHeight: imageRef.current.clientHeight, 
+    //         clientWidth: imageRef.current.clientWidth, 
+    //         aspectRatio: originalAspectRatio})
+    //         console.log("clientHeight after ", imageRef.current.clientHeight )
+    //     }, [])
+        
+        useEffect(()=> {    
         if (imageRef.current) {
             console.dir(imageRef)
             imageRef.current.addEventListener('touchstart', handleTouchStart)
@@ -103,8 +102,9 @@ export const AdjustableImage = props => {
             })
         }
     }, [])
-
+    
     const handleTouchStart = e => {
+        originalAspectRatio = imageRef.current.clientWidth / imageRef.current.clientHeight  
         console.log('touchSTART')
         // console.log(e.touches)
         // console.dir(e.target)
@@ -126,13 +126,13 @@ export const AdjustableImage = props => {
         e.preventDefault()
         e.stopPropagation()
         if (e.touches.length == 1) {
-            console.log('====START=====')
-            console.log('target top: ', e.target.style.top)
-            console.log('cycle: ', moveCount++)
+            // console.log('====START=====')
+            // console.log('target top: ', e.target.style.top)
+            // console.log('cycle: ', moveCount++)
             
-            console.dir(e.target)  
-            console.log('image current location [e.target.y]: ', e.target.y)
-            console.log('change in touch position: ', e.touches[0].clientY - prevY)
+            // console.dir(e.target)  
+            // console.log('image current location [e.target.y]: ', e.target.y)
+            // console.log('change in touch position: ', e.touches[0].clientY - prevY)
             const newX = e.target.offsetLeft + e.touches[0].clientX - prevX  
             const newY = e.target.offsetTop + e.touches[0].clientY - prevY
             //newcord  = currentImgLocation + (difference in current mvmt pos and last mvmt pos)
@@ -182,14 +182,10 @@ export const AdjustableImage = props => {
     return (
         <img
             style={{position: "absolute", zIndex: "1"}}
-            width={width}
-            height={height}
+            // width={width}
             ref={imageRef}
             {...props}
             src={src}
-            // onTouchStart={handleTouchStart}
-            // onTouchMove={handleTouchMove}
-            // onTouchEnd={handleTouchEnd}
         >
             
         </img>
