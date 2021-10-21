@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { makeStyles } from '@material-ui/core'
+import { Button, makeStyles } from '@material-ui/core'
+import axios from 'axios'
 
 const useStyles = makeStyles({
     frameStile: {
@@ -14,37 +15,83 @@ const useStyles = makeStyles({
 })
 
 export const ImageEditor = props => { //srcImage, maybe viewport size
-    const {src} = props
+    const imageRef = useRef(null)
+    const viewPaneRef = useRef(null)
     const [aspectRatio, setAspectRatio] = useState([4, 3]) //width : height
-    console.log('rendering Image Editor')
+    const {src, setIsImageEditing} = props
+    const width = window.innerWidth
+    const height = width * aspectRatio[1] / aspectRatio[0]
     
+    const handleSubmit = () => {
+        const imgWidth = imageRef.current.offsetWidth
+        const imgHeight = imageRef.current.offsetHeight
+        const imgOffsetLeft = imageRef.current.offsetLeft
+        const imgOffsetTop = imageRef.current.offsetTop
+        const viewPaneOffsetLeft = viewPaneRef.current.offsetLeft
+        const viewPaneOffsetTop = viewPaneRef.current.offsetTop
+        const scale = imageRef.current.naturalWidth / imgWidth
+        console.log(scale)
+
+        if (imgWidth + imgOffsetLeft <= width + viewPaneOffsetLeft
+            || imgHeight + imgOffsetTop <= height + viewPaneOffsetTop
+            || imgOffsetLeft > viewPaneOffsetLeft
+            || imgOffsetTop > viewPaneOffsetTop) {
+                console.log(`invalid image position\n
+                             image doesnt span frame width? ${imgWidth + imgOffsetLeft < width + viewPaneOffsetLeft}\n
+                             image doesnt span frame height? ${imgHeight + imgOffsetTop < height + viewPaneOffsetTop}\n
+                             image begins past frame left? ${imgOffsetLeft > viewPaneOffsetLeft}\n
+                             image begins past frame top? ${ imgOffsetTop > viewPaneOffsetTop}
+                             `)
+                
+                return
+        }
+        //Create a canvas or use a canvas 
+        // !! problem with canvas, does it necessarily generate an image with the inherent dimensions determined by the current device? as long as it has the correct aspect ratio it can be scaled up for other viewport sizes right? make larger by default
+        const canvas = document.getElementById("image-format")
+        const canvasContext = canvas.getContext("2d")
+        //Draw the image with the current size and dimensions. 
+        //possibly can use current dimensions of user edited image, so programmatically calculating appropriate size to draw might not be necessary
+        console.log({dx: viewPaneOffsetLeft - imgOffsetLeft,
+                     dy: viewPaneOffsetTop - imgOffsetTop })
+        canvasContext.drawImage(imageRef.current,                    //source parameters need to be scaled to proportion of original img size : element size
+                                scale * (viewPaneOffsetLeft - imgOffsetLeft),  //sx
+                                scale * (viewPaneOffsetTop - imgOffsetTop),    //sy
+                                scale * width, scale * height,                 //sHeight, sWidth
+                                0, 0,                                          //dx, dy
+                                width, height)                 //dHeight, dWidth
+        //create URL from canvas
+        const result = canvas.toDataURL()
+        //append onto write component 
+        const newImg = document.createElement('img')
+        newImg.setAttribute("width", width)
+        newImg.setAttribute("src", result)
+        newImg.style.margin = "-1rem"
+        const currentEntry = document.getElementById("text-input")
+        currentEntry.appendChild(newImg)
+        //send data to server
+        console.log("success!")
+        setIsImageEditing(false)
+    }
+
     return (
-        //should render a frame of acceptable dimensions
-        //change this to flexbox
         <div id="image-editor" style={{position: "fixed", top: "0", left: "0", display: "flex", flexDirection: "column", height: "100vh", width: "100vw"}}>
-            <EditorFrame aspectRatio={aspectRatio} src={src} />
+            <div style={{backgroundColor: "black", height: "12.5%", zIndex: "2"}}></div>
+            <canvas id="image-format" style={{display: "none"}} width={width} height={height}></canvas>
+            <EditorFrame aspectRatio={aspectRatio}
+                         src={src}
+                         width={width}
+                         height={height}
+                         viewPaneRef={viewPaneRef}
+                         imageRef={imageRef} />
             <div id="editor-backdrop" style={{position: "fixed", top: "0", left: "0", height: "100vh", width: "100vw", backgroundColor: "grey"}}></div>
-            <EditorControls />
+            <EditorControls handleSubmit={handleSubmit}/> 
         </div>
     )
-    //render the source image behind the frame
-    // the source image should be able to be translated
-        // [x] and scaled by the user
-    // on confirmation, return an appropriately cropped and scaled version of the source image to the parent component, which should then create an img element in the correct place  
 }
 
 const EditorFrame = props => {
-    const {aspectRatio, src} = props
-    const width = window.innerWidth
-    const height = width * aspectRatio[1] / aspectRatio[0]
+    const {aspectRatio, src, imageRef, viewPaneRef, width, height} = props
     const viewPane = useRef(null)
-    
-    // useEffect(() => { //can this adaptable to window resizing for desktop?
-    //     console.log(`setting viewPane dimensions | width: ${width}, height: ${height}`)
-    //     console.dir(viewPane.current)
-    //     viewPane.current.style.width = width;
-    //     viewPane.current.style.height = height;
-    // }, [aspectRatio])
 
     const classes = useStyles()
 
@@ -53,8 +100,8 @@ const EditorFrame = props => {
             <div id="frame-top" className={classes.frameStile}></div>
             <div id="frame-middle" style={{display: "flex", flexDirection: "row"}}>
                 <div id="frame-left" className={classes.frameStile}></div>
-                    <div id="view-pane" style={{height: `${height}px`, width: `${width}px`, overflow: "hidden"}}>
-                        <AdjustableImage src={src} width={width} /> {/* width prop is passed in */}
+                    <div id="view-pane" ref={viewPaneRef} style={{height: `${height}px`, width: `${width}px`, overflow: "hidden"}}>
+                        <AdjustableImage src={src} width={width} imageRef={imageRef} /> {/* width prop is passed in */}
                     </div>
                 <div id="frame-right" className={classes.frameStile}></div>
             </div>
@@ -64,21 +111,21 @@ const EditorFrame = props => {
 }
 
 const EditorControls = props => {
+    const { handleSubmit } = props
     return (
-        null
+        <div style={{zIndex: "1", backgroundColor: "black", height: "12.5%", padding: "10px"}}>
+            <Button color="secondary" fullWidth={true} onClick={handleSubmit}> Done </Button>
+        </div>
     )
 }
 
 export const AdjustableImage = props => {
-    // const [position, setPosition] = useState({left: 0, top: 0})
-    const imageRef = useRef(null)
     //(!)AdjustableImage is not receiving a height prop, which affects the calculation of the originalAspectRatio variable
-    const {src, height, width} = props
+    const {src, height, width, imageRef} = props
 
     let prevX, prevY;
     let prevDiff = -1
     let originalAspectRatio, originalX, originalY;
-    let moveCount = 0
 
     // useEffect(() => {
     //     console.log("original aspect ratio: ", {image: imageRef.current,
@@ -89,7 +136,7 @@ export const AdjustableImage = props => {
     //     }, [])
         
         useEffect(()=> {    
-        if (imageRef.current) {
+        if (imageRef) {
             console.dir(imageRef)
             imageRef.current.addEventListener('touchstart', handleTouchStart)
             imageRef.current.addEventListener('touchmove', handleTouchMove, {passive: false})
@@ -105,14 +152,10 @@ export const AdjustableImage = props => {
     
     const handleTouchStart = e => {
         originalAspectRatio = imageRef.current.clientWidth / imageRef.current.clientHeight  
-        console.log('touchSTART')
-        // console.log(e.touches)
-        // console.dir(e.target)
         
         if (e.touches.length == 1) {
             prevX = e.touches[0].clientX
             prevY = e.touches[0].clientY
-            // console.log(prevX, prevY)
         }
 
         if (e.touches.length == 2) {
@@ -122,27 +165,18 @@ export const AdjustableImage = props => {
     }
 
     const handleTouchMove = e => {
-        console.log('touchMOVE')
         e.preventDefault()
         e.stopPropagation()
+       
         if (e.touches.length == 1) {
-            // console.log('====START=====')
-            // console.log('target top: ', e.target.style.top)
-            // console.log('cycle: ', moveCount++)
-            
-            // console.dir(e.target)  
-            // console.log('image current location [e.target.y]: ', e.target.y)
-            // console.log('change in touch position: ', e.touches[0].clientY - prevY)
-            const newX = e.target.offsetLeft + e.touches[0].clientX - prevX  
-            const newY = e.target.offsetTop + e.touches[0].clientY - prevY
-            //newcord  = currentImgLocation + (difference in current mvmt pos and last mvmt pos)
-            console.log('calculated new image position', newX)
+            const newX = Math.floor(e.target.offsetLeft + e.touches[0].clientX - prevX)  
+            const newY = Math.floor(e.target.offsetTop + e.touches[0].clientY - prevY)
+
             e.target.style.left = `${newX}px`
             e.target.style.top = `${newY}px`
             
             prevX = e.touches[0].clientX
             prevY = e.touches[0].clientY
-            console.log('====END=====')
         }
 
         if (e.touches.length == 2) {
@@ -173,7 +207,6 @@ export const AdjustableImage = props => {
         if (e.touches.length < 2) {
             prevDiff = -1 
         }
-        moveCount = 0
         // if (e.touches.length < 1) {
             
         // }
@@ -181,6 +214,7 @@ export const AdjustableImage = props => {
 
     return (
         <img
+            className="adjustable"
             style={{position: "absolute", zIndex: "1"}}
             // width={width}
             ref={imageRef}
@@ -214,7 +248,7 @@ function resizeCrop( src, width, height ){
     var crop = width == 0 || height == 0;
 
     // not resize -- if height is to remain the same, but the width is to become larger or remain the same
-    // th and height of the canvas AspectRatioon the dimensions of the src
+    // th and height of the canvas AspectRatio on the dimensions of the src
     // But if the entered width argument is larger, set it to the source's width? 
     if(src.width <= width && height == 0) {
         height = src.height;

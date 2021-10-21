@@ -58,10 +58,6 @@ export const Write = (props) => {
             maximumAge: 0
         }}, [])
 
-    const toggleImageEditor = (src) => {
-        setIsImageEditing(src)
-    }
-
     const handleInput = e => {
         //if user presses enter to start a new paragraph, update state, save to server
         if (e.target.value === 'enter' && inputSpace.current) {
@@ -138,7 +134,7 @@ export const Write = (props) => {
 /*
 ===image upload behavior===
 [x]user can upload multiple files at a time
-[] user can scale and position image with an (simple) instagram style editing interface
+[x] user can scale and position image with an (simple) instagram style editing interface
 []image files will appear in the content container div as the user expects it will appear to the audience
     -maybe by default, just add it to the end
 image's position in relation to other images or text elements should be persistent

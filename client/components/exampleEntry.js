@@ -20,7 +20,7 @@ export const ExampleEntry = () => {
             the ocean. Known for their independent spirit, iron will and determination, haenyeo are representative of 
             the semi-matriarchal family structure of Jeju. </p>
 
-            <AdjustableImage className="test-image" src="/images/test/tree.jpg" />
+            <img className="test-image" src="/images/test/tree.jpg"></img>
             
             <p> Jeju's diving tradition dates back to 434 AD.[2]:100 Originally, diving was an exclusively male profession,
             with the exception of women who worked alongside their husbands.[2]:101 The first mention of female divers 
