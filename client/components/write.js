@@ -29,7 +29,7 @@ const useStyles = makeStyles({
         borderRadius: '1.25rem',
         border: '0px',
         boxShadow: '3px 3px 3px grey'
-    }
+    },
     //actions: {}
 })
 

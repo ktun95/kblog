@@ -32,15 +32,23 @@ export const ImageEditor = props => { //srcImage, maybe viewport size
         const scale = imageRef.current.naturalWidth / imgWidth
         console.log(scale)
 
-        if (imgWidth + imgOffsetLeft <= width + viewPaneOffsetLeft
-            || imgHeight + imgOffsetTop <= height + viewPaneOffsetTop
+        if (imgWidth + imgOffsetLeft < width + viewPaneOffsetLeft
+            || imgHeight + imgOffsetTop < height + viewPaneOffsetTop
             || imgOffsetLeft > viewPaneOffsetLeft
             || imgOffsetTop > viewPaneOffsetTop) {
                 console.log(`invalid image position\n
-                             image doesnt span frame width? ${imgWidth + imgOffsetLeft < width + viewPaneOffsetLeft}\n
-                             image doesnt span frame height? ${imgHeight + imgOffsetTop < height + viewPaneOffsetTop}\n
+                             image doesnt span frame width? ${imgWidth + imgOffsetLeft <= width + viewPaneOffsetLeft}\n
+                             image doesnt span frame height? ${imgHeight + imgOffsetTop <= height + viewPaneOffsetTop}\n
                              image begins past frame left? ${imgOffsetLeft > viewPaneOffsetLeft}\n
-                             image begins past frame top? ${ imgOffsetTop > viewPaneOffsetTop}
+                             image begins past frame top? ${ imgOffsetTop > viewPaneOffsetTop} \n
+                             Image Width:        ${imgWidth} \n
+                             Image Height:       ${imgHeight} \n
+                             Image Offset Left   ${imgOffsetLeft} \n
+                             Image Offset Top    ${imgOffsetTop} \n
+                             ViewPane Offset Left${viewPaneOffsetLeft} \n
+                             ViewPane Offset Top ${viewPaneOffsetTop} \n
+                             ViewPane Width      ${width} \n
+                             ViewPane Height     ${height} \n
                              `)
                 
                 return
@@ -74,7 +82,7 @@ export const ImageEditor = props => { //srcImage, maybe viewport size
     }
 
     return (
-        <div id="image-editor" style={{position: "fixed", top: "0", left: "0", display: "flex", flexDirection: "column", height: "100vh", width: "100vw"}}>
+        <div id="image-editor" style={{position: "fixed", top: "0", left: "0", display: "flex", flexDirection: "column", height: "100%", width: "100%"}}>
             <div style={{backgroundColor: "black", height: "12.5%", zIndex: "2"}}></div>
             <canvas id="image-format" style={{display: "none"}} width={width} height={height}></canvas>
             <EditorFrame aspectRatio={aspectRatio}
@@ -120,7 +128,6 @@ const EditorControls = props => {
 }
 
 export const AdjustableImage = props => {
-    //(!)AdjustableImage is not receiving a height prop, which affects the calculation of the originalAspectRatio variable
     const {src, height, width, imageRef} = props
 
     let prevX, prevY;
