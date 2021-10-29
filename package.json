@@ -7,7 +7,7 @@
     "test": "jest",
     "build": "webpack",
     "build-watch": "webpack -w",
-    "start": "NODE_ENV=production && webpack && node server",
+    "start": "NODE_ENV=production && node server",
     "start-dev": "cross-env NODE_ENV=development&&npm-run-all --parallel watch:server watch:build",
     "watch:build": "Webpack -w --mode development",
     "watch:server": "nodemon server",
