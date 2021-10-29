@@ -1,1 +1,1 @@
-NODE_ENV=production && webpack && node server
+web: NODE_ENV=production && node server
