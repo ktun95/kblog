@@ -6,9 +6,10 @@ const app = express()
 const morgan = require('morgan')
 const addRequestId = require('express-request-id')({setHeader: false})
 const { mongoClient } = require('./db')
-const PORT = 3030
+const PORT = process.env.PORT || 3030
+console.log(process.env.PORT)
+const SESSION_SECRET = process.env.SESSION_SECRET || 'ICY_HOT'
 // const SESSION_SECRET = process.env.NODE_ENV === 'development?' ? 'ICY_HOT' : process.env.SESSION_SECRET
-const SESSION_SECRET = 'ICY_HOT'
 
 function useMiddleware() {
     morgan.token('id', (req) => req.id.split('-')[0])
