@@ -1,9 +1,7 @@
 const { MongoClient } = require('mongodb')
-const username = encodeURIComponent("kevin_tun")
-const password = encodeURIComponent("1234pork")
-const database = encodeURIComponent("tintin")
+const { dbUsername, dbPassword, dbName } = require('../config')
 const clusterURL = encodeURIComponent()
-const uri = `mongodb+srv://${username}:${password}@cluster0.1cts9.mongodb.net/${database}?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${dbUsername}:${dbPassword}@cluster0.1cts9.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 
 
 const mongoClient = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });

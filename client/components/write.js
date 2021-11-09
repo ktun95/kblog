@@ -21,7 +21,7 @@ const useStyles = makeStyles({
         boxShadow: '3px 3px 3px grey'
     },
     fileUpload: {
-        position: 'fixed',
+        position: 'absolute',
         bottom: '2rem',
         right: '2rem',
         height: '2.5rem',
