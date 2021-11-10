@@ -10,12 +10,12 @@ body {
     margin: auto;
 }
 
-@media screen and (min-width: 375px) {
+@media screen and (min-width: 414px) {
     html {
-        width: 375px
+        width: 414px
     }
     body {
-        width: 375px;
+        width: 414px;
         padding: 0;
         margin: 0;
     }
@@ -46,10 +46,10 @@ img:not(.adjustable) {
     position: fixed; 
 } */
 
-#content-container * {
+/* #content-container * {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
-}
+} */
 
 #map {
     height: 50vh;
