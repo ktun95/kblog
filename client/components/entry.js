@@ -6,7 +6,7 @@ export const Entry = (props) => { //title, text, coordinates
     
     
     return (
-        <div contentEditable="true"
+        <div
             onBlur={() => console.log('leaving textarea')}
         >
             <h2>{props.selected.title}</h2>

@@ -11,7 +11,7 @@ const {port, sessionSecret} = require('./config')
 function useMiddleware() {
     morgan.token('id', (req) => req.id.split('-')[0])
     
-    app.use(express.json())
+    app.use(express.json({limit: 5000000}))
     app.use(express.urlencoded({extended: true}))
     
     app.use(express.static(path.join(__dirname, '..', '/public')))

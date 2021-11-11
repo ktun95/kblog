@@ -1,3 +1,4 @@
+//rename on completion
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react'
 import axios from 'axios'
 import { makeStyles } from '@material-ui/core'
@@ -34,10 +35,15 @@ const useStyles = makeStyles({
 })
 
 // [] needs logic to make the first line a title if user deletes it
-export const Write = (props) => {
-    const [titleValue, setTitleValue] = useState('')
-    const [userCoordinates, setUserCoordinates] = useState([])
-    const [entryArray, setEntryArray] = useState([])
+export const entryWrite = (props) => { 
+    const title = props.title || ''
+    const coordinates = props.coordinates || []
+    const postContent = props.postContent || []
+
+    const [isWriteMode, setIsWriteMode] = useState('false') 
+    const [titleValue, setTitleValue] = useState(title)
+    const [userCoordinates, setUserCoordinates] = useState(coordinates)
+    const [entryArray, setEntryArray] = useState(postContent)
     const [isImageEditing, setIsImageEditing] = useState(false)
     
     const inputSpace = useRef(null)
@@ -84,23 +90,14 @@ export const Write = (props) => {
     }
 
     const saveEntry = async () => {
-        //get strings from  paragraphs imgs
-        const title = document.getElementById('title').value;
-        const postContents = []
+        //get strings from title, paragraphs
+        const paragraphs = []
+        const title = document.querySelector('#content-container #title').value;
+        const images = document.querySelectorAll('#text-input img');
         
-        document.querySelectorAll('#post-content *').forEach( e => {
-            if (e.tagName === 'P') {
-                postContents.push(e.innerText)
-            }
-            
-            if (e.tagName === 'IMG') {
-                postContents.push(e.src)
-            }
-
-
-        })
+        document.querySelectorAll('#text-input p').forEach( p => {paragraphs.push(p.innerHTML)})
         //create entry obj
-        const newEntry = new Entry(title, userCoordinates, postContents)
+        const newEntry = new Entry(title, userCoordinates, paragraphs, images)
         //post request with obj
         const req = await axios({
             method: 'post',
@@ -127,15 +124,14 @@ export const Write = (props) => {
                 // onChange={handleChange}
                 style={{border: "0px", fontSize: "18px"}}
             ></input>
-            <div id="post-content" contentEditable="true" ref={inputSpace}>
+            <div id="text-input" contentEditable="true" ref={inputSpace}>
                 <p>...</p>
             </div>
             {/* <button onClick={toggleImageEditor} className={classes.save}/> */}
             {/* <input type="button" onClick={saveEntry} className={classes.save}></input> */}
             <label htmlFor="file-upload" className={classes.fileUpload}>
-                <input type="file" id="file-upload" accept="image/*" onChange={handleFileChange}></input>
+                <input type="file" id="file-upload" accept="image/*" onChange={handleFileChange} multiple></input>
             </label>
-            <input type="button" id="save-post" onClick={saveEntry}></input>
             {isImageEditing ? <ImageEditor src={isImageEditing} setIsImageEditing={setIsImageEditing}/> : null}
         </React.Fragment>
     )

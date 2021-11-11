@@ -33,9 +33,6 @@ const getDb = async () => {
     throw new Error('Could not get database.')
   }
 }
-// run()
-
-// resolveAndExport()
 
 module.exports = {
   mongoClient,
