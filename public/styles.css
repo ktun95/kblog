@@ -28,7 +28,6 @@ input[type="file"] {
 img:not(.adjustable) {
     width: 100vw;
     margin: -1rem;
-    /* margin-bottom: 1rem; */
 }
 
 #app {
