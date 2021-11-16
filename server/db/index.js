@@ -1,9 +1,7 @@
 const { MongoClient } = require('mongodb')
-const username = encodeURIComponent(process.env.MONGO_USERNAME)
-const password = encodeURIComponent(process.env.MONGO_PASSWORD)
-const database = encodeURIComponent(process.env.MONGO_DATABASE)
+const { dbUsername, dbPassword, dbName } = require('../config')
 const clusterURL = encodeURIComponent()
-const uri = `mongodb+srv://${username}:${password}@cluster0.1cts9.mongodb.net/${database}?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${dbUsername}:${dbPassword}@cluster0.1cts9.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 
 const mongoClient = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -34,9 +32,6 @@ const getDb = async () => {
     throw new Error('Could not get database.')
   }
 }
-// run()
-
-// resolveAndExport()
 
 module.exports = {
   mongoClient,

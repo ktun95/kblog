@@ -6,15 +6,12 @@ const app = express()
 const morgan = require('morgan')
 const addRequestId = require('express-request-id')({setHeader: false})
 const { mongoClient } = require('./db')
-const PORT = process.env.PORT || 3030
-console.log(process.env.PORT)
-const SESSION_SECRET = process.env.SESSION_SECRET || 'ICY_HOT'
-// const SESSION_SECRET = process.env.NODE_ENV === 'development?' ? 'ICY_HOT' : process.env.SESSION_SECRET
+const {port, sessionSecret} = require('./config')
 
 function useMiddleware() {
     morgan.token('id', (req) => req.id.split('-')[0])
     
-    app.use(express.json())
+    app.use(express.json({limit: 5000000}))
     app.use(express.urlencoded({extended: true}))
     
     app.use(express.static(path.join(__dirname, '..', '/public')))
@@ -28,7 +25,7 @@ function useMiddleware() {
     app.use(
         session({
             store: MongoStore.create({ client: mongoClient.connect() }),
-            secret: SESSION_SECRET,
+            secret: sessionSecret,
             cookie: {
                 maxAge: 60000
             },
@@ -65,8 +62,8 @@ const startServer = () => {
         useMiddleware()
         useRoutes()
         useErrorHandlers()
-        app.listen(PORT, ()=> {
-            console.log(`Starting server on port ${PORT}`)
+        app.listen(port, ()=> {
+            console.log(`Starting server on port ${port}`)
         })
     } catch (err) {
         console.dir(err)

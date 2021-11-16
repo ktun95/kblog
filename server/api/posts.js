@@ -48,14 +48,45 @@ router.get('/:id', async (req, res, next) => {
 
 //fix this
 router.post('/', async (req, res, next) => {
-    if (!!req.user) req.status(401).send('Unauthorized request')
-    const newDoc = req.body
+    if (!!req.user) req.status(401).send('Unauthorized request') 
+    
+    const newEntry = {
+        title: req.body.title || 'untitled',
+        coordinates: req.body.coordinates || null,
+        publishDate: req.body.publishDate || null,
+        postContents: req.body.postContents || []
+    }
+
     try {
-        const db = Client.db("tintin")
+        const db = mongoClient.db("tintin")
         const postsCollection = db.collection('posts')
-        const newPost = await postsCollection.insertOne(newDoc)
+        const newPost = await postsCollection.insertOne(newEntry)
         console.log(`${newPost.insertedCount} documents were inserted with the _id: ${newPost.insertedId}`)
-        res.send(newPost)
+        res.send(newPost)   
+    } catch (err) {
+        next(err)
+    }
+})
+
+router.post('/', async (req, res, next) => {
+    if (!!req.user) req.status(401).send('Unauthorized request')
+    //this endpoint is responsible for inserting a new post document in MongoDB.
+    //It should verify that all fields in the body are valid, possibly through object destructuring.
+   /*
+   {
+        title: string,
+        coordinates: [123.45, -543.21]
+        publishDate: dateString 
+        postContents: [
+            'text',
+            'imageURI',
+            'text',
+            '...'
+        ]
+    }
+ */
+    try {
+
     } catch (err) {
         next(err)
     }

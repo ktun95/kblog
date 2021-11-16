@@ -1,7 +1,7 @@
+//rename on completion
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react'
 import axios from 'axios'
-import { makeStyles, IconButton, Input } from '@material-ui/core'
-import { Create, Image, Save } from '@material-ui/icons'
+import { makeStyles } from '@material-ui/core'
 import { Entry } from '../interfaces/entry'
 import { ImageEditor } from '.'
 // import { getUserLocation } from '../functions/navigator'
@@ -31,14 +31,19 @@ const useStyles = makeStyles({
         border: '0px',
         boxShadow: '3px 3px 3px grey'
     },
-    //action: {}
+    //actions: {}
 })
 
 // [] needs logic to make the first line a title if user deletes it
-export const Write = (props) => {
-    const [titleValue, setTitleValue] = useState('')
-    const [userCoordinates, setUserCoordinates] = useState([])
-    const [entryArray, setEntryArray] = useState([])
+export const entryWrite = (props) => { 
+    const title = props.title || ''
+    const coordinates = props.coordinates || []
+    const postContent = props.postContent || []
+
+    const [isWriteMode, setIsWriteMode] = useState('false') 
+    const [titleValue, setTitleValue] = useState(title)
+    const [userCoordinates, setUserCoordinates] = useState(coordinates)
+    const [entryArray, setEntryArray] = useState(postContent)
     const [isImageEditing, setIsImageEditing] = useState(false)
     
     const inputSpace = useRef(null)
@@ -72,7 +77,7 @@ export const Write = (props) => {
 
     const handleFileChange = e => {
         // console.log(e.target.files[0])
-        console.log("User uploading image")
+
         setIsImageEditing(URL.createObjectURL(e.target.files[0]))
         // console.log(newImage)
         // inputSpace.current.appendChild(newImage)
@@ -85,23 +90,17 @@ export const Write = (props) => {
     }
 
     const saveEntry = async () => {
-        //get strings from  paragraphs imgs
-        const title = document.getElementById('title').value;
-        const postContents = []
+        //get strings from paragraphs, images
+        const postContent = []
+        // const title = document.querySelector('#content-container #title').value;
+        // const images = document.querySelectorAll('#text-input img');
         
-        document.querySelectorAll('#post-content *').forEach( e => {
-            if (e.tagName === 'P') {
-                postContents.push(e.innerText)
-            }
+        document.querySelectorAll('#post-content *').forEach( item => {
             
-            if (e.tagName === 'IMG') {
-                postContents.push(e.src)
-            }
-
-
+            paragraphs.push(p.innerHTML)
         })
         //create entry obj
-        const newEntry = new Entry(title, userCoordinates, postContents)
+        const newEntry = new Entry(title, userCoordinates, paragraphs, images)
         //post request with obj
         const req = await axios({
             method: 'post',
@@ -133,21 +132,18 @@ export const Write = (props) => {
             </div>
             {/* <button onClick={toggleImageEditor} className={classes.save}/> */}
             {/* <input type="button" onClick={saveEntry} className={classes.save}></input> */}
+            
             <FloatingButtonGroup styles={{bottom: "2rem", right: "2rem"}}>
-                <input style={{display: "none"}} type="file" id="file-upload" accept="image/*" onChange={handleFileChange} />
-                <label htmlFor="file-upload">
-                    <IconButton aria-label="file-upload" component="span">
-                        <Image /> 
-                    </IconButton>
+                <label htmlFor="file-upload" className={classes.fileUpload}>
+                    <input type="file" id="file-upload" accept="image/*" onChange={handleFileChange} multiple></input>
                 </label>
-                <IconButton onClick={saveEntry}>
-                    <Create />
-                </IconButton>
             </FloatingButtonGroup>
-            {isImageEditing ? <ImageEditor src={isImageEditing} setIsImageEditing={setIsImageEditing}/> : null}
+            
+            {isImageEditing ?
+            <ImageEditor src={isImageEditing} setIsImageEditing={setIsImageEditing}/> : null}
         </React.Fragment>
     )
-}
+} 
 
 const FloatingButtonGroup = (props) => {
     const { flexDirection } = props 
@@ -158,16 +154,15 @@ const FloatingButtonGroup = (props) => {
             style={{
                 position: "absolute",
                 display: "flex",
-                gap: '2px',
-                flexDirection: "column-reverse" || flexDirection,
+                gap: "5px",
                 ...props.styles  
             }}
+            flexDirection={"column-reverse" || flexDirection}
         >
             {props.children}
         </div>
     )
 }
-
 /*
 ===image upload behavior===
 [x]user can upload multiple files at a time

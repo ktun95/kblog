@@ -2,8 +2,7 @@ const express = require('express')
 const Hashes = require('jshashes')
 const router = express.Router()
 const { getDb } = require('../db')
-// const salt = process.env.NODE_ENV == 'development' ? 'flakeysalt' : process.env.SALT
-const salt = 'flakeysalt'
+const { salt } = require('../config')
 
 //TODO implement google oauth login flow
 

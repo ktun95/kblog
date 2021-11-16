@@ -22,7 +22,7 @@ export const ImageEditor = props => { //srcImage, maybe viewport size
     const width = window.innerWidth
     const height = width * aspectRatio[1] / aspectRatio[0]
     
-    const handleSubmit = () => {
+    const getImageUrl = (cb) => {
         const imgWidth = imageRef.current.offsetWidth
         const imgHeight = imageRef.current.offsetHeight
         const imgOffsetLeft = imageRef.current.offsetLeft
@@ -30,7 +30,6 @@ export const ImageEditor = props => { //srcImage, maybe viewport size
         const viewPaneOffsetLeft = viewPaneRef.current.offsetLeft
         const viewPaneOffsetTop = viewPaneRef.current.offsetTop
         const scale = imageRef.current.naturalWidth / imgWidth
-        console.log(scale)
 
         if (imgWidth + imgOffsetLeft < width + viewPaneOffsetLeft
             || imgHeight + imgOffsetTop < height + viewPaneOffsetTop
@@ -74,15 +73,15 @@ export const ImageEditor = props => { //srcImage, maybe viewport size
         newImg.setAttribute("width", width)
         newImg.setAttribute("src", result)
         newImg.style.margin = "-1rem"
-        const currentEntry = document.getElementById("text-input")
+        const currentEntry = document.getElementById("post-content")
         currentEntry.appendChild(newImg)
         //send data to server
         console.log("success!")
-        setIsImageEditing(false)
+        setIsImageEditing(false) 
     }
 
     return (
-        <div id="image-editor" style={{position: "fixed", top: "0", left: "0", display: "flex", flexDirection: "column", height: "100%", width: "100%"}}>
+        <div id="image-editor" style={{position: "absolute", top: "0", left: "0", display: "flex", flexDirection: "column", height: "100%", width: "100%"}}>
             <div style={{backgroundColor: "black", height: "12.5%", zIndex: "2"}}></div>
             <canvas id="image-format" style={{display: "none"}} width={width} height={height}></canvas>
             <EditorFrame aspectRatio={aspectRatio}
@@ -91,8 +90,8 @@ export const ImageEditor = props => { //srcImage, maybe viewport size
                          height={height}
                          viewPaneRef={viewPaneRef}
                          imageRef={imageRef} />
-            <div id="editor-backdrop" style={{position: "fixed", top: "0", left: "0", height: "100vh", width: "100vw", backgroundColor: "grey"}}></div>
-            <EditorControls handleSubmit={handleSubmit}/> 
+            <div id="editor-backdrop" style={{position: "absolute", top: "0", left: "0", height: "100%", width: "100%", backgroundColor: "grey"}}></div>
+            <EditorControls getImageUrl={getImageUrl}/> 
         </div>
     )
 }
@@ -119,10 +118,10 @@ const EditorFrame = props => {
 }
 
 const EditorControls = props => {
-    const { handleSubmit } = props
+    const { getImageUrl } = props
     return (
         <div style={{zIndex: "1", backgroundColor: "black", height: "12.5%", padding: "10px"}}>
-            <Button color="secondary" fullWidth={true} onClick={handleSubmit}> Done </Button>
+            <Button color="secondary" fullWidth={true} onClick={getImageUrl}> Done </Button>
         </div>
     )
 }
@@ -233,59 +232,6 @@ export const AdjustableImage = props => {
     )
 }
 
-function thisFunctionShoulBeCallByTheFileuploaderButton(e){
-    e.preventDefault && e.preventDefault();
-    var image, canvas, i;
-    var images = 'files' in e.target ? e.target.files : 'dataTransfer' in e ? e.dataTransfer.files : [];
-    if(images && images.length) {
-        for(i in images) {  
-            if(typeof images[i] != 'object') continue;
-            image = new Image();
-            image.src = createObjectURL(images[i]);
-            image.onload =  function(e){
-                var mybase64resized = resizeCrop( e.target, 200, 150 ).toDataURL('image/jpeg', 90);
-                alert(mybase64resized);
-            }
-        }           
-    }
-}
+const appendToElement = (htmlElement) => () => {
 
-function resizeCrop( src, width, height ){
-//if the provided (desired) width OR height is 0, crop = TRUE, 0 value means... don't change that value?
-    var crop = width == 0 || height == 0;
-
-    // not resize -- if height is to remain the same, but the width is to become larger or remain the same
-    // th and height of the canvas AspectRatio on the dimensions of the src
-    // But if the entered width argument is larger, set it to the source's width? 
-    if(src.width <= width && height == 0) {
-        height = src.height;
-    }
-    // resize -- in order to keep the proportions consistent, the height should be multiplied 
-    // by the new width / original. but why change 
-    if( src.width > width && height == 0){
-        height = src.height * (width / src.width);
-    }
-
-    // check scale
-    var xscale = width  / src.width;
-    var yscale = height / src.height;
-    // if we need to crop the image, the scaling value should be the smaller of the xscale or yscale
-    // if cropping is unnecessary, the scaling value should be the larger of the two
-    var scale  = crop ? Math.min(xscale, yscale) : Math.max(xscale, yscale);
-
-    // create empty canvas
-    var canvas = document.createElement("canvas");                  
-    // Was a desired width or height specified? If not, the corresponding dimension should initially 
-    canvas.width  = width ? width   : Math.round(src.width  * scale);
-    canvas.height = height ? height : Math.round(src.height * scale);
-    canvas.getContext("2d").scale(scale,scale);
-
-    // crop it top center
-    canvas.getContext("2d").drawImage(src, ((src.width * scale) - canvas.width) * -.5 , ((src.height * scale) - canvas.height) * -.5 );
-    return canvas;
-}
-
-function createObjectURL(i){ 
-    var URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
-    return URL.createObjectURL(i);
-}
+} 
