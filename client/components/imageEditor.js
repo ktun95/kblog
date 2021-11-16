@@ -81,7 +81,7 @@ export const ImageEditor = props => { //srcImage, maybe viewport size
     }
 
     return (
-        <div id="image-editor" style={{position: "fixed", top: "0", left: "0", display: "flex", flexDirection: "column", height: "100%", width: "100%"}}>
+        <div id="image-editor" style={{position: "absolute", top: "0", left: "0", display: "flex", flexDirection: "column", height: "100%", width: "100%"}}>
             <div style={{backgroundColor: "black", height: "12.5%", zIndex: "2"}}></div>
             <canvas id="image-format" style={{display: "none"}} width={width} height={height}></canvas>
             <EditorFrame aspectRatio={aspectRatio}
@@ -90,7 +90,7 @@ export const ImageEditor = props => { //srcImage, maybe viewport size
                          height={height}
                          viewPaneRef={viewPaneRef}
                          imageRef={imageRef} />
-            <div id="editor-backdrop" style={{position: "fixed", top: "0", left: "0", height: "100vh", width: "100vw", backgroundColor: "grey"}}></div>
+            <div id="editor-backdrop" style={{position: "absolute", top: "0", left: "0", height: "100%", width: "100%", backgroundColor: "grey"}}></div>
             <EditorControls getImageUrl={getImageUrl}/> 
         </div>
     )

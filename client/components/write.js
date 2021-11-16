@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react'
 import axios from 'axios'
-import { makeStyles } from '@material-ui/core'
+import { makeStyles, IconButton, Input } from '@material-ui/core'
+import { Create, Image, Save } from '@material-ui/icons'
 import { Entry } from '../interfaces/entry'
 import { ImageEditor } from '.'
 // import { getUserLocation } from '../functions/navigator'
@@ -21,16 +22,16 @@ const useStyles = makeStyles({
         boxShadow: '3px 3px 3px grey'
     },
     fileUpload: {
-        position: 'absolute',
-        bottom: '2rem',
-        right: '2rem',
+        // position: 'absolute',
+        // bottom: '2rem',
+        // right: '2rem',
         height: '2.5rem',
         width: '2.5rem',
         borderRadius: '1.25rem',
         border: '0px',
         boxShadow: '3px 3px 3px grey'
     },
-    //actions: {}
+    //action: {}
 })
 
 // [] needs logic to make the first line a title if user deletes it
@@ -71,7 +72,7 @@ export const Write = (props) => {
 
     const handleFileChange = e => {
         // console.log(e.target.files[0])
-
+        console.log("User uploading image")
         setIsImageEditing(URL.createObjectURL(e.target.files[0]))
         // console.log(newImage)
         // inputSpace.current.appendChild(newImage)
@@ -132,14 +133,40 @@ export const Write = (props) => {
             </div>
             {/* <button onClick={toggleImageEditor} className={classes.save}/> */}
             {/* <input type="button" onClick={saveEntry} className={classes.save}></input> */}
-            <label htmlFor="file-upload" className={classes.fileUpload}>
-                <input type="file" id="file-upload" accept="image/*" onChange={handleFileChange}></input>
-            </label>
-            <input type="button" id="save-post" onClick={saveEntry}></input>
+            <FloatingButtonGroup styles={{bottom: "2rem", right: "2rem"}}>
+                <input style={{display: "none"}} type="file" id="file-upload" accept="image/*" onChange={handleFileChange} />
+                <label htmlFor="file-upload">
+                    <IconButton aria-label="file-upload" component="span">
+                        <Image /> 
+                    </IconButton>
+                </label>
+                <IconButton onClick={saveEntry}>
+                    <Create />
+                </IconButton>
+            </FloatingButtonGroup>
             {isImageEditing ? <ImageEditor src={isImageEditing} setIsImageEditing={setIsImageEditing}/> : null}
         </React.Fragment>
     )
-} 
+}
+
+const FloatingButtonGroup = (props) => {
+    const { flexDirection } = props 
+    console.log(FloatingButtonGroup)
+    
+    return (
+        <div
+            style={{
+                position: "absolute",
+                display: "flex",
+                gap: '2px',
+                flexDirection: "column-reverse" || flexDirection,
+                ...props.styles  
+            }}
+        >
+            {props.children}
+        </div>
+    )
+}
 
 /*
 ===image upload behavior===

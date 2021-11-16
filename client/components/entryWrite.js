@@ -22,9 +22,9 @@ const useStyles = makeStyles({
         boxShadow: '3px 3px 3px grey'
     },
     fileUpload: {
-        position: 'absolute',
-        bottom: '2rem',
-        right: '2rem',
+        // position: 'absolute',
+        // bottom: '2rem',
+        // right: '2rem',
         height: '2.5rem',
         width: '2.5rem',
         borderRadius: '1.25rem',
@@ -90,12 +90,15 @@ export const entryWrite = (props) => {
     }
 
     const saveEntry = async () => {
-        //get strings from title, paragraphs
-        const paragraphs = []
-        const title = document.querySelector('#content-container #title').value;
-        const images = document.querySelectorAll('#text-input img');
+        //get strings from paragraphs, images
+        const postContent = []
+        // const title = document.querySelector('#content-container #title').value;
+        // const images = document.querySelectorAll('#text-input img');
         
-        document.querySelectorAll('#text-input p').forEach( p => {paragraphs.push(p.innerHTML)})
+        document.querySelectorAll('#post-content *').forEach( item => {
+            
+            paragraphs.push(p.innerHTML)
+        })
         //create entry obj
         const newEntry = new Entry(title, userCoordinates, paragraphs, images)
         //post request with obj
@@ -124,19 +127,42 @@ export const entryWrite = (props) => {
                 // onChange={handleChange}
                 style={{border: "0px", fontSize: "18px"}}
             ></input>
-            <div id="text-input" contentEditable="true" ref={inputSpace}>
+            <div id="post-content" contentEditable="true" ref={inputSpace}>
                 <p>...</p>
             </div>
             {/* <button onClick={toggleImageEditor} className={classes.save}/> */}
             {/* <input type="button" onClick={saveEntry} className={classes.save}></input> */}
-            <label htmlFor="file-upload" className={classes.fileUpload}>
-                <input type="file" id="file-upload" accept="image/*" onChange={handleFileChange} multiple></input>
-            </label>
-            {isImageEditing ? <ImageEditor src={isImageEditing} setIsImageEditing={setIsImageEditing}/> : null}
+            
+            <FloatingButtonGroup styles={{bottom: "2rem", right: "2rem"}}>
+                <label htmlFor="file-upload" className={classes.fileUpload}>
+                    <input type="file" id="file-upload" accept="image/*" onChange={handleFileChange} multiple></input>
+                </label>
+            </FloatingButtonGroup>
+            
+            {isImageEditing ?
+            <ImageEditor src={isImageEditing} setIsImageEditing={setIsImageEditing}/> : null}
         </React.Fragment>
     )
 } 
 
+const FloatingButtonGroup = (props) => {
+    const { flexDirection } = props 
+    console.log(FloatingButtonGroup)
+    
+    return (
+        <div
+            style={{
+                position: "absolute",
+                display: "flex",
+                gap: "5px",
+                ...props.styles  
+            }}
+            flexDirection={"column-reverse" || flexDirection}
+        >
+            {props.children}
+        </div>
+    )
+}
 /*
 ===image upload behavior===
 [x]user can upload multiple files at a time
