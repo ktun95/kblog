@@ -9,7 +9,7 @@ export const Entry = (props) => { //title, text, coordinates
     
     const renderPostContents = (contentsArray) => {
         return contentsArray.map((item, idx) => {
-            if (item.slice(0,10) === 'data:image') {
+            if (typeof item === 'string' && item.slice(0,10) === 'data:image') {
                 return (<img key={idx} src={item}></img>)
             } else {
                 return (<p key={idx}>{item}</p>)

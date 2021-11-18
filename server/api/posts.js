@@ -26,7 +26,7 @@ router.get('/all', async (req, res, next) => {
     try {
         // const db = await getDb()
         const posts =  await req.db.collection('posts')
-        const findResult = posts.find({}, {})
+        const findResult = posts.find({}, {fields: {images: false}})
         const allPosts = await findResult.toArray()
         console.log(allPosts)
         res.json(allPosts)
@@ -54,7 +54,8 @@ router.post('/', async (req, res, next) => {
         title: req.body.title || 'untitled',
         coordinates: req.body.coordinates || null,
         publishDate: req.body.publishDate || null,
-        postContents: req.body.postContents || []
+        postContents: req.body.postContents || [],
+        images: req.body.images || []
     }
 
     try {
