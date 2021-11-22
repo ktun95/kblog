@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const { mongoClient } = require('../db')
+const { mongoClient, ObjectID } = require('../db')
+
 // Client.connect()
 //put connection check middleware here?
 // MongoClient instance has an isConnected method 
@@ -26,7 +27,7 @@ router.get('/all', async (req, res, next) => {
     try {
         // const db = await getDb()
         const posts =  await req.db.collection('posts')
-        const findResult = posts.find()
+        const findResult = posts.find({}, {fields: {images: false}})
         const allPosts = await findResult.toArray()
         console.log(allPosts)
         res.json(allPosts)
@@ -39,8 +40,8 @@ router.get('/:id', async (req, res, next) => {
     const id = req.params.id
     try {
         const posts = await req.db.collection('posts')
-        const findOneResult = await posts.findOne(id)
-        
+        const singlePost = await posts.findOne({"_id": ObjectID(id)})
+        res.json(singlePost)
     } catch (err) {
         next(err)
     }
@@ -54,7 +55,8 @@ router.post('/', async (req, res, next) => {
         title: req.body.title || 'untitled',
         coordinates: req.body.coordinates || null,
         publishDate: req.body.publishDate || null,
-        postContents: req.body.postContents || []
+        postContents: req.body.postContents || [],
+        images: req.body.images || []
     }
 
     try {
@@ -68,25 +70,11 @@ router.post('/', async (req, res, next) => {
     }
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/:id/images', async (req, res, next) => {
     if (!!req.user) req.status(401).send('Unauthorized request')
-    //this endpoint is responsible for inserting a new post document in MongoDB.
-    //It should verify that all fields in the body are valid, possibly through object destructuring.
-   /*
-   {
-        title: string,
-        coordinates: [123.45, -543.21]
-        publishDate: dateString 
-        postContents: [
-            'text',
-            'imageURI',
-            'text',
-            '...'
-        ]
-    }
- */
+    const postId = req.params.id
     try {
-
+        
     } catch (err) {
         next(err)
     }

@@ -88,6 +88,8 @@ export const Write = (props) => {
         //get strings from  paragraphs imgs
         const title = document.getElementById('title').value;
         const postContents = []
+        const images = []
+        let imageCount = 0
         
         document.querySelectorAll('#post-content *').forEach( e => {
             if (e.tagName === 'P') {
@@ -95,21 +97,20 @@ export const Write = (props) => {
             }
             
             if (e.tagName === 'IMG') {
-                postContents.push(e.src)
+                postContents.push(imageCount)
+                images.push(e.src)
+                imageCount++
             }
-
 
         })
         //create entry obj
-        const newEntry = new Entry(title, userCoordinates, postContents)
+        const newEntry = new Entry(title, userCoordinates, postContents, images)
         //post request with obj
         const req = await axios({
             method: 'post',
             url: '/api/posts/',
             data: newEntry
         })
-
-        console.log(req.status)
     }
 
     const classes = useStyles()

@@ -19,7 +19,7 @@ export const ImageEditor = props => { //srcImage, maybe viewport size
     const viewPaneRef = useRef(null)
     const [aspectRatio, setAspectRatio] = useState([4, 3]) //width : height
     const {src, setIsImageEditing} = props
-    const width = window.innerWidth
+    const width = window.innerWidth //should be changed a component derived value in order to work in desktop mode
     const height = width * aspectRatio[1] / aspectRatio[0]
     
     const getImageUrl = (cb) => {
