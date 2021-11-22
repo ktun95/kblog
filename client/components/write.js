@@ -111,8 +111,6 @@ export const Write = (props) => {
             url: '/api/posts/',
             data: newEntry
         })
-
-        console.log(req.status)
     }
 
     const classes = useStyles()

@@ -33,7 +33,7 @@ export const Main = () => {
 
     const toggleWriteMode = () => {
         setIsWriteMode(!isWriteMode)
-    }
+    }    
 
     useEffect(() => {
         async function getPosts() {

@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const { mongoClient } = require('../db')
+const { mongoClient, ObjectID } = require('../db')
+
 // Client.connect()
 //put connection check middleware here?
 // MongoClient instance has an isConnected method 
@@ -39,8 +40,8 @@ router.get('/:id', async (req, res, next) => {
     const id = req.params.id
     try {
         const posts = await req.db.collection('posts')
-        const findOneResult = await posts.findOne(id)
-        
+        const singlePost = await posts.findOne({"_id": ObjectID(id)})
+        res.json(singlePost)
     } catch (err) {
         next(err)
     }
@@ -71,9 +72,9 @@ router.post('/', async (req, res, next) => {
 
 router.post('/:id/images', async (req, res, next) => {
     if (!!req.user) req.status(401).send('Unauthorized request')
-
+    const postId = req.params.id
     try {
-
+        
     } catch (err) {
         next(err)
     }

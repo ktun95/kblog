@@ -1,4 +1,4 @@
-const { MongoClient } = require('mongodb')
+const { MongoClient, ObjectID } = require('mongodb')
 const { dbUsername, dbPassword, dbName } = require('../config')
 const clusterURL = encodeURIComponent()
 const uri = `mongodb+srv://${dbUsername}:${dbPassword}@cluster0.1cts9.mongodb.net/${dbName}?retryWrites=true&w=majority`;
@@ -37,5 +37,6 @@ const getDb = async () => {
 module.exports = {
   mongoClient,
   connectClient,
-  getDb
+  getDb,
+  ObjectID
 }
