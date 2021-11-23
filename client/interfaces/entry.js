@@ -1,4 +1,4 @@
-export class Entry {
+export class EntryObj {
     constructor(title, coordinatesArray, postContents, images) {
         this.title = title;
         this.coordinates = coordinatesArray

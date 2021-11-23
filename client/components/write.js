@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 import { makeStyles, IconButton, Input } from '@material-ui/core'
 import { Create, Image, Save } from '@material-ui/icons'
-import { Entry } from '../interfaces/entry'
+import { EntryObj } from '../interfaces/entry'
 import { ImageEditor } from '.'
 // import { getUserLocation } from '../functions/navigator'
 

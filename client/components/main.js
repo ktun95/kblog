@@ -33,7 +33,11 @@ export const Main = () => {
 
     const toggleWriteMode = () => {
         setIsWriteMode(!isWriteMode)
-    }    
+    }
+    
+    const handleScroll = (e) => {
+
+    }
 
     useEffect(() => {
         async function getPosts() {
@@ -59,25 +63,18 @@ export const Main = () => {
 
     return(
         <React.Fragment>
-            {/* <div onClick={() => toggleDrawer(true)}>open drawer</div> */}
-            <Header toggleWriteMode={toggleWriteMode} />
-            
-            <Accordion>
-                <AccordionSummary expandIcon={<span>V</span>}>
+            <Header selected={selected} setSelected={setSelected} isWriteMode={isWriteMode} setIsWriteMode={setIsWriteMode} toggleWriteMode={toggleWriteMode} />
+            <Accordion expanded={showMap}>
+                <AccordionSummary expandIcon={<span>V</span>} onClick={() => {setShowMap(!showMap)}}>
                     MAP
                 </AccordionSummary>
                 <AccordionDetails>
                     <Map places={places} showMap={showMap} setSelected={setSelected}/>
                 </AccordionDetails>
             </Accordion>
-            {/* <Map places={places} showMap={showMap} /> */}
-            <ContentContainer>
-                {isWriteMode ? <Write /> : Object.keys(selected).length ? <Entry selected={selected}/> : <ExampleEntry />}
+            <ContentContainer setShowMap={setShowMap}>
+                {Object.keys(selected).length ? <Entry selected={selected} isWriteMode={isWriteMode} setIsWriteMode={setIsWriteMode} /> : <ExampleEntry />}
             </ContentContainer>
-            {/* <SwipeableDrawer open={isDrawerOpen}>
-                <div onClick={() => toggleDrawer(false)}>
-                </div>
-            </SwipeableDrawer> */}
         </React.Fragment>
     )
 };
