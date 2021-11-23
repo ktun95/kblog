@@ -54,7 +54,7 @@ export const Map = (props) => { // {places, setSelected}
             }).addTo(mymap);    
             setMap(mymap)
         }
-    }, [props.showMap])
+    }, [])
 
     useEffect(() => {
         if (document.getElementById('map') && Object.keys(map).length !== 0) {
@@ -64,7 +64,7 @@ export const Map = (props) => { // {places, setSelected}
         return (function cleanUp() {
             removeMarkers(markers)
         })
-    }, [props.places])
+    }, [props.places, props.showMap])
 
     return(
         <div id="map">

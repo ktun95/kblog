@@ -60,15 +60,15 @@ export const Main = () => {
     return(
         <React.Fragment>
             <Header selected={selected} setSelected={setSelected} isWriteMode={isWriteMode} setIsWriteMode={setIsWriteMode} toggleWriteMode={toggleWriteMode} />
-            <Accordion>
-                <AccordionSummary expandIcon={<span>V</span>}>
+            <Accordion expanded={showMap}>
+                <AccordionSummary expandIcon={<span>V</span>} onClick={() => {setShowMap(!showMap)}}>
                     MAP
                 </AccordionSummary>
                 <AccordionDetails>
                     <Map places={places} showMap={showMap} setSelected={setSelected}/>
                 </AccordionDetails>
             </Accordion>
-            <ContentContainer>
+            <ContentContainer setShowMap={setShowMap}>
                 {Object.keys(selected).length ? <Entry selected={selected} isWriteMode={isWriteMode} setIsWriteMode={setIsWriteMode} /> : <ExampleEntry />}
             </ContentContainer>
         </React.Fragment>

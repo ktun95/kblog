@@ -32,13 +32,17 @@ export const Header = (props) => {
     };
     
     const newPost = () => {
-        toggleWriteMode()
-        console.log('write mode:', isWriteMode)
+        setIsWriteMode(true)
         setSelected({postContents:[]})
     }
 
     const editPost = () => {
         setIsWriteMode(true)
+    }
+
+    const backToMain = () => {
+        setIsWriteMode(false)
+        setSelected({})
     }
 
     return (
@@ -54,9 +58,11 @@ export const Header = (props) => {
             onClose={handleClose}
         >
             <MenuItem onClick={handleClose}>All Posts</MenuItem>
-            {isWriteMode ? null
-             : <MenuItem onClick={() => {handleClose(editPost)}}>Edit Current</MenuItem>}
-            <MenuItem onClick={() => {handleClose(newPost)}}>{isWriteMode ? 'Back' : 'New'}</MenuItem>
+            {isWriteMode
+             ? <MenuItem onClick={() => handleClose(backToMain)}> Back </MenuItem>
+             : [<MenuItem onClick={() => {handleClose(newPost)}}>New</MenuItem>,
+                <MenuItem onClick={() => {handleClose(editPost)}}>Edit Current</MenuItem>]
+             }
         </Menu>
             <div className={classes.titleAdjacent}></div>
             <h1 className={classes.blogTitle}> Kady's Travels </h1>

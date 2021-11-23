@@ -6,7 +6,7 @@ import { EntryObj } from '../interfaces/entry'
 import { ImageEditor } from '.'
 
 export const Entry = (props) => { //title, text, coordinates
-    const { selected, isWriteMode, setIsWriteMode } = props
+    const { selected, isWriteMode, setIsWriteMode, setShowMap } = props
     
     const [titleValue, setTitleValue] = useState('')
     const [userCoordinates, setUserCoordinates] = useState([])
@@ -50,7 +50,7 @@ export const Entry = (props) => { //title, text, coordinates
     const saveEntry = async () => {
         //get strings from  paragraphs imgs
         console.log("Initiating saveEntry()")
-        const title = document.getElementById('title').value;
+        const title = document.getElementById('title').value || selected.title;
         const postContents = []
         const images = []
         let imageCount = 0
@@ -117,9 +117,8 @@ export const Entry = (props) => { //title, text, coordinates
         <div
             onBlur={() => console.log('leaving textarea')}
         >
-
-                        <div className={classes.metadata}>
-                {`${userCoordinates[0]}, ${userCoordinates[1]}`}
+            <div className={classes.metadata}>
+                {`${selected.coordinates[0]}, ${selected.coordinates[1]}`}
             </div>
             <input
                 type="text"
