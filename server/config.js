@@ -10,5 +10,6 @@ module.exports = {
     dbUsername: process.env.DB_USERNAME,
     dbPassword: process.env.DB_PASSWORD,
     dbName: process.env.DB_NAME,
-    salt: process.env.SALT
+    salt: process.env.SALT,
+    mapBoxToken: process.env.MAPBOX_ACCESS_TOKEN
 }
