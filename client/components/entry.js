@@ -37,7 +37,7 @@ export const Entry = (props) => { //title, text, coordinates
         if (selected._id) {
             getPostImages(selected._id)
         }
-    }, [])
+    }, [selected])
     
     const getPostImages = async postId => {
         let response = await axios({
