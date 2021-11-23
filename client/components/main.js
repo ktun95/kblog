@@ -59,9 +59,7 @@ export const Main = () => {
 
     return(
         <React.Fragment>
-            {/* <div onClick={() => toggleDrawer(true)}>open drawer</div> */}
-            <Header toggleWriteMode={toggleWriteMode} />
-            
+            <Header selected={selected} setSelected={setSelected} isWriteMode={isWriteMode} setIsWriteMode={setIsWriteMode} toggleWriteMode={toggleWriteMode} />
             <Accordion>
                 <AccordionSummary expandIcon={<span>V</span>}>
                     MAP
@@ -70,14 +68,9 @@ export const Main = () => {
                     <Map places={places} showMap={showMap} setSelected={setSelected}/>
                 </AccordionDetails>
             </Accordion>
-            {/* <Map places={places} showMap={showMap} /> */}
             <ContentContainer>
-                {isWriteMode ? <Write /> : Object.keys(selected).length ? <Entry selected={selected}/> : <ExampleEntry />}
+                {Object.keys(selected).length ? <Entry selected={selected} isWriteMode={isWriteMode} setIsWriteMode={setIsWriteMode} /> : <ExampleEntry />}
             </ContentContainer>
-            {/* <SwipeableDrawer open={isDrawerOpen}>
-                <div onClick={() => toggleDrawer(false)}>
-                </div>
-            </SwipeableDrawer> */}
         </React.Fragment>
     )
 };

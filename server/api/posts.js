@@ -80,6 +80,28 @@ router.post('/:id/images', async (req, res, next) => {
     }
 })
 
+router.put('/:id', async (req, res, next) => {
+    if (!!req.user) req.status(401).send('Unauthorized request') 
+    const postId = req.params.id
+
+    const newEntry = {
+        title: req.body.title || 'untitled',
+        coordinates: req.body.coordinates || null,
+        publishDate: req.body.publishDate || null,
+        postContents: req.body.postContents || [],
+        images: req.body.images || []
+    }
+
+    try {
+        const db = mongoClient.db("tintin")
+        const postsCollection = db.collection('posts')
+        const updatedPost = await postsCollection.updateOne({"_id": ObjectID(postId)}, {$set: newEntry})
+        res.send(updatedPost)   
+    } catch (err) {
+        next(err)
+    }
+})
+
 // router.use((req, res, next) => {
 //     Client.close()
 // })

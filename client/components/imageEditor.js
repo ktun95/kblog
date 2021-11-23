@@ -73,6 +73,8 @@ export const ImageEditor = props => { //srcImage, maybe viewport size
         newImg.setAttribute("width", width)
         newImg.setAttribute("src", result)
         newImg.style.margin = "-1rem"
+        newImg.style.marginTop = "1px"
+        newImg.style.marginBottom = "1px"
         const currentEntry = document.getElementById("post-content")
         currentEntry.appendChild(newImg)
         //send data to server
