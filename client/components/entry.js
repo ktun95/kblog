@@ -51,6 +51,7 @@ export const Entry = (props) => { //title, text, coordinates
         //get strings from  paragraphs imgs
         console.log("Initiating saveEntry()")
         const title = document.getElementById('title').value || selected.title;
+        const entryCoordinates = selected.coordinates || userCoordinates
         const postContents = []
         const images = []
         let imageCount = 0
@@ -72,7 +73,7 @@ export const Entry = (props) => { //title, text, coordinates
         console.log('postContents array filled')
 
         //create entry obj
-        const newEntry = new EntryObj(title, userCoordinates, postContents, images)
+        const newEntry = new EntryObj(title, entryCoordinates, postContents, images)
         //post or update request with obj
         console.log('Entry object created: ', newEntry)
         if (selected._id) {
