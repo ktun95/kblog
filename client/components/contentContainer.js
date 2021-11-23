@@ -15,7 +15,7 @@ export const ContentContainer = (props) => {
     const classes = useStyles()
     
     return (
-        <div id="content-container" className={classes.container} onScroll={() => {console.log('map should close');props.setShowMap(false)}}
+        <div id="content-container" className={classes.container} onScroll={() => {props.setShowMap(false)}}
         >
             {props.children}
         </div>

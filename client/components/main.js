@@ -33,7 +33,11 @@ export const Main = () => {
 
     const toggleWriteMode = () => {
         setIsWriteMode(!isWriteMode)
-    }    
+    }
+    
+    const handleScroll = (e) => {
+
+    }
 
     useEffect(() => {
         async function getPosts() {

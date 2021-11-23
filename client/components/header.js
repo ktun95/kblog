@@ -57,7 +57,7 @@ export const Header = (props) => {
             open={Boolean(anchorEl)}
             onClose={handleClose}
         >
-            <MenuItem onClick={handleClose}>All Posts</MenuItem>
+            {/* <MenuItem onClick={handleClose}>All Posts</MenuItem> */}
             {isWriteMode
              ? <MenuItem onClick={() => handleClose(backToMain)}> Back </MenuItem>
              : [<MenuItem onClick={() => {handleClose(newPost)}}>New</MenuItem>,

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'; 
 import axios from 'axios'
 import { makeStyles, IconButton, Input } from '@material-ui/core'
-import { Create, Image, Save } from '@material-ui/icons'
+import { Create, Image, Save, DeleteIcon } from '@material-ui/icons'
 import { EntryObj } from '../interfaces/entry'
 import { ImageEditor } from '.'
 
@@ -90,6 +90,10 @@ export const Entry = (props) => { //title, text, coordinates
         }
         console.log(req)
     }
+
+    const deleteEntry = () => {
+        
+    }
     
     const renderPostContents = (contentsArray) => {
         console.log('rendering post contents', images)
@@ -118,7 +122,7 @@ export const Entry = (props) => { //title, text, coordinates
             onBlur={() => console.log('leaving textarea')}
         >
             <div className={classes.metadata}>
-                {`${selected.coordinates[0]}, ${selected.coordinates[1]}`}
+                {selected.coordinates ? `${selected.coordinates[0]}, ${selected.coordinates[1]}` : `${userCoordinates[0]}, ${userCoordinates[1]}`}
             </div>
             <input
                 type="text"
@@ -141,8 +145,11 @@ export const Entry = (props) => { //title, text, coordinates
                         <Image /> 
                     </IconButton>
                 </label>
+                <IconButton onClick={deleteEntry}>
+                    <DeleteIcon />
+                </IconButton>
                 <IconButton onClick={saveEntry}>
-                    <Create />
+                    <Save />
                 </IconButton>
             </FloatingButtonGroup>
              : null}

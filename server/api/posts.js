@@ -102,9 +102,22 @@ router.put('/:id', async (req, res, next) => {
     }
 })
 
+router.delete('/:id', async (req, res, next) => {
+    if (!!req.user) req.status(401).send('Unauthorized request') 
+    const postId = req.params.id
+
+    try {
+        const db = mongoClient.db("tintin")
+        const postsCollection = db.collection('posts')
+        const deletedPost = await postsCollection.deleteOne({"_id": ObjectID(postId)})
+        res.status(deletedPost)
+    } catch (err) {
+        next(err)
+    }
+})
+
 // router.use((req, res, next) => {
 //     Client.close()
 // })
-
 
 module.exports = router;
