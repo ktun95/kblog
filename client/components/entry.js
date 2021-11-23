@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'; 
 import axios from 'axios'
 import { makeStyles, IconButton, Input } from '@material-ui/core'
-import { Create, Image, Save, DeleteIcon } from '@material-ui/icons'
+import { Create, Image, Save, Delete } from '@material-ui/icons'
 import { EntryObj } from '../interfaces/entry'
 import { ImageEditor } from '.'
 
@@ -145,11 +145,11 @@ export const Entry = (props) => { //title, text, coordinates
                         <Image /> 
                     </IconButton>
                 </label>
-                <IconButton onClick={deleteEntry}>
-                    <DeleteIcon />
-                </IconButton>
                 <IconButton onClick={saveEntry}>
                     <Save />
+                </IconButton>
+                <IconButton disabled={true} onClick={deleteEntry}>
+                    <Delete />
                 </IconButton>
             </FloatingButtonGroup>
              : null}
