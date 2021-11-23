@@ -13,7 +13,6 @@ const useStyles = makeStyles({
 export const ExampleEntry = () => {
     return (
         <div>
-            <time datetime="2021-07-03 20:00">July 3, 2021</time>
             <p>
             Hello! Welcome to the demo of my blogging app. This app is currently best viewed on a mobile device or by using
             device emulation from the developer tools. To begin, please open the map above and click/tap on one of the markers to 
