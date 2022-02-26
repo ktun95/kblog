@@ -9,7 +9,7 @@ export const Map = (props) => { // {places, setSelected}
     // const [inView, setInView] = useState({})
     const [markers, setMarkers] = useState([])
     let mymap;
-
+    let myRepeatingMarkers = L.gridLayer.repeatedMarkers()
     //Accepts an array of objects representing different places, with each place having a coordinates property. 
     //This function uses these coordinates to generate a marker object and then adds those markers to the map 
     //provided as an argument
@@ -25,9 +25,11 @@ export const Map = (props) => { // {places, setSelected}
 
             const newMarker = L.marker(coordinates)
             newMarker.on('click', () => {
-                console.log('Setting selected place to ', p)
+                // console.log('Setting selected place to ', p)
                 props.setSelected(p)})
 
+            myRepeatingMarkers.addMarker(newMarker)
+            console.log(myRepeatingMarkers)
             newMarker.addTo(mapObj)
             setMarkers([...markers, newMarker])
         })
@@ -35,6 +37,7 @@ export const Map = (props) => { // {places, setSelected}
 
     const removeMarkers = (markerArray) => {
         markerArray.forEach((m) => {
+            myRepeatingMarkers.removeMarker(m)
             m.remove()
         })
     }
@@ -51,15 +54,25 @@ export const Map = (props) => { // {places, setSelected}
                 id: 'mapbox/streets-v11',
                 tileSize: 512,
                 zoomOffset: -1,
+                worldCopyJump: true,
+                // noWrap: true,
+                // bounds: [
+                //     [-90, -180],
+                //     [90, 180]
+                // ],
                 accessToken: MAPBOX_ACCESS_TOKEN
             }).addTo(mymap);    
+
+            //enables repeating markers when wrapping around globe
+            myRepeatingMarkers.addTo(mymap)
+
             setMap(mymap)
         }
     }, [])
 
     useEffect(() => {
         if (document.getElementById('map') && Object.keys(map).length !== 0) {
-            addMarkers(map, props.places)
+            addMarkers(map, props.places)   
         }
         
         return (function cleanUp() {

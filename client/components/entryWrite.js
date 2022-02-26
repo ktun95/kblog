@@ -1,7 +1,7 @@
 //rename on completion
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react'
 import axios from 'axios'
-import { makeStyles } from '@material-ui/core'
+import { makeStyles } from '@mui/styles'
 import { Entry } from '../interfaces/entry'
 import { ImageEditor } from '.'
 // import { getUserLocation } from '../functions/navigator'

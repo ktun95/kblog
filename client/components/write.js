@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
-import { makeStyles, IconButton, Input } from '@material-ui/core'
+import { makeStyles, IconButton, Input } from '@mui/styles'
 import { Create, Image, Save } from '@material-ui/icons'
 import { EntryObj } from '../interfaces/entry'
 import { ImageEditor } from '.'

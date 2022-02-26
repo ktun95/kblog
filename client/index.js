@@ -7,6 +7,16 @@ import {
   } from 'react-router-dom';
 import axios from 'axios';  
 import { Main, Login } from './components';
+import { createTheme, ThemeProvider } from '@mui/material/styles'
+
+const theme = createTheme({
+    palette: {
+        primary: {
+            main: '#ffcc80'
+        }
+        // secondary：
+    }
+})
 
 const App = () => {
     //replace with context later maybe, don't forget to make
@@ -26,16 +36,18 @@ const App = () => {
     }, [])
 
     return (
-        <Router>
-            <Switch>
-                <Route path='/login'>
-                    <Login user={user} setUser={setUser} />
-                </Route>
-                <Route path='/'>
-                    <Main user={user}/>
-                </Route>
-            </Switch>
-        </Router>
+        <ThemeProvider theme={theme}>
+            <Router>
+                <Switch>
+                    <Route path='/login'>
+                        <Login user={user} setUser={setUser} />
+                    </Route>
+                    <Route path='/'>
+                        <Main user={user}/>
+                    </Route>
+                </Switch>
+            </Router>
+        </ThemeProvider>
     )
 }
 

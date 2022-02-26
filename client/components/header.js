@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/styles'
-import { Button, Menu, MenuItem } from '@material-ui/core';
+import { makeStyles } from '@mui/styles'
+import { Button, Menu, MenuItem } from '@mui/material';
 
 const useStyles = makeStyles({
     header: {

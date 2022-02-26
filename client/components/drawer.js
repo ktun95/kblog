@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SwipeableDrawer } from '@material-ui/core';
+import { SwipeableDrawer } from '@mui/material';
 
 const toggleDrawer = (props) => {
 
