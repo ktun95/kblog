@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import {
     BrowserRouter as Router,
-    Switch,
+    Routes,
     Route,
   } from 'react-router-dom';
 import axios from 'axios';  
@@ -37,22 +37,18 @@ const App = () => {
 
     return (
         <ThemeProvider theme={theme}>
-            <Router>
-                <Switch>
-                    <Route path='/login'>
-                        <Login user={user} setUser={setUser} />
-                    </Route>
-                    <Route path='/'>
-                        <Main user={user}/>
-                    </Route>
-                </Switch>
-            </Router>
+            <Routes>
+                <Route path='/login' element={<Login user={user} setUser={setUser} />} />                    
+                <Route path='*' element={<Main user={user}/>} />
+            </Routes>
         </ThemeProvider>
     )
 }
 
 ReactDOM.render(
-    <App />,
+    <Router>
+        <App />
+    </Router>,  
     document.getElementById('app')
 )
 
