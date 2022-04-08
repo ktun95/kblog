@@ -23,14 +23,11 @@ export const CollapsingMenuList = props => {
                 </ListItemText>
             </ListItemButton>
             <Collapse in={open}>
-                {Object.keys(props.routes).map(route => {
+                {Object.keys(props.countries).map(c => {
                     return (
-                        <ListItemButton onClick={() => navigate(props.routes[route])}>
-                            <ListItemText primary={route} key={route} />
+                        <ListItemButton key={c} onClick={() => navigate(props.countries[c])}>
+                            <ListItemText primary={c} key={c} />
                         </ListItemButton>
-                        // <ListItemButton onClick={navigate(routes[South Korea])}>
-                        //     <ListItemText primary={route} key={route} />
-                        // </ListItemButton>
                     )
                 })}
             </Collapse>

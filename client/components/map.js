@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1Ijoia3Z0dW4iLCJhIjoiY2twcWQ1bHpsMGdocDJ2cXpxeWV4dmpwcSJ9.UEvqdwV4QQ_im2CGNQAGSQ';
-const defaultCords = [35.17, 129.08]; 
+const defaultCords = [35.17, 129.08]; //should be set 
 
 export const Map = (props) => { // {places, setSelected}
     const [map, setMap] = useState({})

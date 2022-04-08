@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import ReactDOM from 'react-dom';
 import {
     BrowserRouter as Router,
@@ -9,6 +9,9 @@ import axios from 'axios';
 import { Main, Login } from './components';
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 
+const UserContext = createContext(null)
+
+
 const theme = createTheme({
     palette: {
         primary: {
@@ -17,6 +20,8 @@ const theme = createTheme({
         // secondary：
     }
 })
+
+
 
 const App = () => {
     //replace with context later maybe, don't forget to make
@@ -38,8 +43,7 @@ const App = () => {
     return (
         <ThemeProvider theme={theme}>
             <Routes>
-                <Route path='/login' element={<Login user={user} setUser={setUser} />} />                    
-                <Route path='*' element={<Main user={user}/>} />
+                <Route path='*' element={<Main user={user} setUser={setUser} />} />
             </Routes>
         </ThemeProvider>
     )

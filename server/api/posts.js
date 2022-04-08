@@ -36,6 +36,14 @@ router.get('/all', async (req, res, next) => {
     }
 })
 
+router.get('/country/:countryCode', async (req, res, next) => {
+    try {
+        const posts = await req.db.collection( )
+    } catch (err) {
+        next(err)
+    }
+})
+
 router.get('/:id', async (req, res, next) => {
     const id = req.params.id
     try {

@@ -5,12 +5,16 @@ import { Routes,
 import axios from 'axios'
 import { Map,
          ContentContainer,
+         WritePage,
          ExampleEntry,
          Entry,
          Header,
          Write,
          Browse,
-         CollapsingMenuList } from '.';
+         CollapsingMenuList,
+         MyAppBar,
+         MyDrawer,
+         Login } from '.';
 import { Container,
          SwipeableDrawer,
          AppBar,
@@ -44,13 +48,13 @@ export const Main = () => {
     const [isWriteMode, setIsWriteMode] = useState(false)
     const [places, setPlaces] = useState([])
     let navigate = useNavigate()
-    
+
     const toggleMap = (bool) => {
         setShowMap(bool)
     }
 
-    const toggleDrawer = (bool) => {
-        setIsDrawerOpen(bool)
+    const toggleDrawer = () => {
+        setIsDrawerOpen(!isDrawerOpen)
     }
 
     const toggleMenu = () => {
@@ -98,21 +102,8 @@ export const Main = () => {
                     <Map places={places} showMap={showMap} setSelected={setSelected}/>
                 </AccordionDetails>
             </Accordion> */}
-            <AppBar position="relative">
-                <Toolbar>
-                    <Button variant="text" color="inherit" onClick={() => toggleDrawer(!isDrawerOpen)}> = </Button>
-                    <h1>Kady's Travels</h1>
-                </Toolbar>
-            </AppBar> 
-            <Drawer anchor="left" open={isDrawerOpen} variant="persistent">
-                <Toolbar>
-                    <Button variant="text" color="inherit" onClick={() => toggleDrawer(!isDrawerOpen)}> = </Button>
-                </Toolbar>
-                <ListItemButton key="Map" onClick={() => navigate('/map')}>
-                    <ListItemText primary="Map" key="Map" />
-                </ListItemButton>
-                <CollapsingMenuList routes={routes["Country"]} />
-            </Drawer>
+            <MyAppBar toggleDrawer={toggleDrawer} />
+            <MyDrawer toggleDrawer={toggleDrawer} isDrawerOpen={isDrawerOpen} routes={routes} />
             <Container sx={{
                 padding: "1rem",
                 overflowY: "auto",
@@ -120,8 +111,11 @@ export const Main = () => {
                 maxWidth: "100%"
             }}>
                 <Routes>
+                    {/* <Route path='/login' element={<Login user={user} setUser={setUser} />} />                     */}
+                    <Route path="/new" element={<WritePage />} />
                     <Route path="/map" element={<Map places={places} showMap={showMap} setSelected={setSelected}/>} />                            
-                    {/* <Route path="/country/sk" element={<Browse />} />                          */}
+                    <Route path="/posts/country/:countryCode" element={<Browse routes={routes} />} />                         
+                    {/* <Route path="/posts/country/:countryCode/:id" element={<EntryWrite />} />                          */}
                     {/* <Route path="/country/sk/test">
                         {places.length ? <Entry selected={places[0]} /> : null}
                     </Route> */}
@@ -131,5 +125,15 @@ export const Main = () => {
     )
 };
 
+const exampleEntry = {
+    _id: "04235097",
+    title: "Example Entry",
+    location: {
+        country: "South Korea",
+        coordinates: [37.53, 127.02],
+    },
+    contents: "
 
+    "
+}
 
