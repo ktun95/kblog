@@ -9,11 +9,10 @@ import { Container,
          CardContent,
          CardMedia } from '@mui/material'
 
-export const Browse = props => {
-    const { routes } = props
+export const Browse = ({ routes }) => {
     let params = useParams()
     console.log(params)
-
+    console.log('routes', routes)
     useEffect(() => {
 
     })

@@ -35,7 +35,7 @@ const useStyles = makeStyles({
 })
 
 // [] needs logic to make the first line a title if user deletes it
-export const entryWrite = (props) => { 
+export const EntryWrite = (props) => { 
     const title = props.title || ''
     const coordinates = props.coordinates || []
     const postContent = props.postContent || []

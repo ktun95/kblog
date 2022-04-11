@@ -59,11 +59,14 @@ router.get('/:id', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
     if (!!req.user) req.status(401).send('Unauthorized request') 
     
+    console.dir(req.body)
+
+    //maybe put in some real validation at some point...
     const newEntry = {
         title: req.body.title || 'untitled',
         coordinates: req.body.coordinates || null,
         publishDate: req.body.publishDate || null,
-        postContents: req.body.postContents || [],
+        postContents: req.body.postContents || '',
         images: req.body.images || []
     }
 

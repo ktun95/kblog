@@ -125,15 +125,15 @@ export const Main = () => {
     )
 };
 
-const exampleEntry = {
-    _id: "04235097",
-    title: "Example Entry",
-    location: {
-        country: "South Korea",
-        coordinates: [37.53, 127.02],
-    },
-    contents: "
+// const exampleEntry = {
+//     _id: "04235097",
+//     title: "Example Entry",
+//     location: {
+//         country: "South Korea",
+//         coordinates: [37.53, 127.02],
+//     },
+//     contents: "
 
-    "
-}
+//     "
+// }
 
