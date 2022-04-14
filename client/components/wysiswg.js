@@ -78,6 +78,7 @@ export const WritePage = ({ entry = {}, initialDialogState = false }) => {
             data: newEntry
         })
 
+        handleCloseDialog()
         console.log(req)
     }
 

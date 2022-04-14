@@ -32,7 +32,7 @@ export const Map = (props) => { // {places, setSelected}
                 props.setSelected(p)})
 
             myRepeatingMarkers.addMarker(newMarker)
-            newMarker.addTo(mapObj)
+            // newMarker.addTo(mapObj)
             setMarkers([...markers, newMarker])
         })
     }
@@ -47,12 +47,19 @@ export const Map = (props) => { // {places, setSelected}
 
     useEffect(() => { // This effect initializes the leaflet map with a tile layer.        
         if (document.getElementById('map')) {
-            mymap = L.map('map').setView(initialCords, 6) 
+            mymap = L.map('map', {
+                maxZoom: 18,
+                minZoom: 3,
+                maxBounds: [
+                    [-90, -270],
+                    [90, 270]
+                ]
+            }).setView(initialCords, 6) 
                 
             L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
                 attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-                maxZoom: 18,
-                // minZoom: 6,
+                // maxZoom: 18,
+                // minZoom: 17,
                 id: 'mapbox/streets-v11',
                 tileSize: 512,
                 zoomOffset: -1,
@@ -74,7 +81,8 @@ export const Map = (props) => { // {places, setSelected}
     useEffect(() => {
         //Check if a container div with id 'map' is present and if there is a react state object, 'map'
         if (document.getElementById('map') && Object.keys(map).length !== 0) {
-            addMarkers(map, props.places)   
+            addMarkers(map, props.places)
+            myRepeatingMarkers.addTo(map)   
         }
         
         return (function cleanUp() {
