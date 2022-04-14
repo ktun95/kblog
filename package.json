@@ -33,6 +33,7 @@
     "@mui/system": "^5.4.1",
     "axios": "^0.26.1",
     "babel-loader": "^8.2.2",
+    "buffer": "^6.0.3",
     "connect-mongo": "^4.5.0",
     "core-js": "^3.13.1",
     "dotenv": "^10.0.0",
@@ -55,6 +56,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-draft-wysiwyg": "^1.14.7",
+    "react-html-parser": "^2.0.2",
     "react-leaflet": "^2.7.0",
     "react-router-dom": "^6.2.1",
     "style-loader": "^3.3.1"

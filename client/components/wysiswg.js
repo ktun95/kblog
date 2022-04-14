@@ -64,10 +64,11 @@ export const WritePage = ({ entry = {}, initialDialogState = false }) => {
     }
 
     //modify this function to account for whether the post is being saved as a draft or published
-    const handleSubmit = async () => {
+    const handleSubmit = async ({ publish = false }) => {
         const newEntry = {
             title: entryTitle,
-            postContents: draftToHtml(convertToRaw(editorState.getCurrentContent()))
+            postContents: draftToHtml(convertToRaw(editorState.getCurrentContent())),
+            publish
         }
         
         console.log(newEntry)
@@ -87,6 +88,35 @@ export const WritePage = ({ entry = {}, initialDialogState = false }) => {
 
     return(
         <React.Fragment>
+                <input 
+                    id="entry-title"
+                    value={entryTitle}
+                    onChange={handleChange}
+                    placeholder="Untitled"
+                    >
+                    
+                    
+                </input>
+                <Dialog open={openDialog} onClose={handleCloseDialog}>
+                    <DialogTitle>{dialogAction.ACTION_TITLE}</DialogTitle>
+                    <DialogContent>
+                        <TextField
+                            autoFocus
+                            // margin="dense"
+                            // id="name"
+                            label="Title"
+                            // type="email"
+                            fullWidth
+                            variant="standard"
+                            value={entryTitle}
+                            onChange={handleChange}
+                        />
+                    </DialogContent>                    
+                    <DialogActions>
+                        <Button onClick={handleCloseDialog}>Cancel</Button>
+                        <Button onClick={() => handleSubmit(dialogAction.ACTION_TITLE === 'Publish' ? {publish: true} : {publish: false})}>{dialogAction.ACTION_TITLE}</Button>
+                    </DialogActions>    
+                </Dialog>
                 <Editor
                     editorState={editorState}
                     wrapperClassName='editor-wrapper'
@@ -95,24 +125,6 @@ export const WritePage = ({ entry = {}, initialDialogState = false }) => {
                 />
                 {/* <textarea value={draftToHtml(convertToRaw(editorState.getCurrentContent()))} style={{width: '100%', height: '40rem'}}
                 /> */}
-                <Dialog open={openDialog} onClose={handleCloseDialog}>
-                    <DialogTitle>{dialogAction.ACTION_TITLE}</DialogTitle>                    
-                    <TextField
-                        autoFocus
-                        // margin="dense"
-                        // id="name"
-                        label="Post Title"
-                        // type="email"
-                        fullWidth
-                        variant="standard"
-                        value={entryTitle}
-                        onChange={handleChange}
-                    />
-                    <DialogActions>
-                        <Button onClick={handleCloseDialog}>Cancel</Button>
-                        <Button onClick={handleSubmit}>{dialogAction.ACTION_TITLE}</Button>
-                    </DialogActions>
-                </Dialog>
                 <Button startIcon={<Delete />}> Delete </Button>
                 <Button startIcon={<Save />} onClick={handleSaveModal}> Save </Button>
                 <Button startIcon={<PublishOutlined />} onClick={handlePublishModal}> Publish </Button>

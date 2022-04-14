@@ -20,7 +20,7 @@ export const MyDrawer = props => {
                 <ListItemText primary="Map" key="Map" />
             </ListItemButton>
             <CollapsingMenuList countries={routes["Country"]} />
-            <ListItemButton sx={{flexGrow: 0, justifyContent: "flex-end"}}  key="Drafts" onClick={() => navigate('/drafts')}>
+            <ListItemButton sx={{flexGrow: 0, justifyContent: "flex-end"}}  key="Drafts" onClick={() => navigate('/posts/drafts')}>
                 <ListItemText primary="Drafts" key="Drafts" />
             </ListItemButton>
             <ListItemButton sx={{flexGrow: 0, justifyContent: "flex-end"}}  key="New" onClick={() => navigate('/new')}>

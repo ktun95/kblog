@@ -36,6 +36,24 @@ router.get('/all', async (req, res, next) => {
     }
 })
 
+router.get('/drafts', async (req, res, next) => {
+    try {
+        const query = {$or: [
+                        { published: {$exists: false} },
+                        { published: {$eq: false } }
+                    ]
+                }   
+
+        const posts =  await req.db.collection('posts')
+        const findResult = posts.find(query, {fields: {images: false} })
+        const allDrafts = await findResult.toArray()
+        console.log(allDrafts)
+        res.json(allDrafts)
+    } catch (err) {
+        next(err)
+    }
+})
+
 router.get('/country/:countryCode', async (req, res, next) => {
     try {
         const posts = await req.db.collection( )

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Routes,
          Route,
-        useNavigate } from 'react-router-dom';
+         useNavigate } from 'react-router-dom';
 import axios from 'axios'
 import { Map,
          ContentContainer,
@@ -106,7 +106,7 @@ export const Main = () => {
             <MyDrawer toggleDrawer={toggleDrawer} isDrawerOpen={isDrawerOpen} routes={routes} />
             <Container sx={{
                 padding: "1rem",
-                overflowY: "auto",
+                // overflowY: "auto",
                 height: "100%",
                 maxWidth: "100%"
             }}>
@@ -114,6 +114,8 @@ export const Main = () => {
                     {/* <Route path='/login' element={<Login user={user} setUser={setUser} />} />                     */}
                     <Route path="/new" element={<WritePage />} />
                     <Route path="/map" element={<Map places={places} showMap={showMap} setSelected={setSelected}/>} />                            
+                    <Route path="/posts/drafts/" element={<Browse routes={routes} entries={places.filter(entry => !entry.published || entry.published == 'false')} />} />
+                    <Route path="/posts/drafts/:postId" element={<Entry />} />
                     <Route path="/posts/country/:countryCode" element={<Browse routes={routes} />} />                         
                     {/* <Route path="/posts/country/:countryCode/:id" element={<EntryWrite />} />                          */}
                     {/* <Route path="/country/sk/test">

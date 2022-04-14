@@ -4,6 +4,7 @@ export { Drawer } from './drawer';
 export { ContentContainer } from './contentContainer';
 export { EntryWrite } from './entryWrite';
 export { ExampleEntry } from './exampleEntry';
+export { EntryForMobile } from './entryForMobile';
 export { Entry } from './entry';
 export { Header } from './header';
 export { Write } from './write';
