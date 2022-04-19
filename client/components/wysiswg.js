@@ -26,7 +26,26 @@ import { flexbox } from '@mui/system';
 //     )
 // }
 
-
+const LocationDialog = () => {
+    return (
+        <Dialog>
+            <DialogTitle>Location</DialogTitle>
+            <DialogContent>
+                <TextField
+                    autoFocus
+                    // margin="dense"
+                    // id="name"
+                    label="Title"
+                    // type="email"
+                    fullWidth
+                    variant="standard"
+                    value={entryTitle}
+                    onChange={handleChange}
+                />
+            </DialogContent>
+        </Dialog>
+    )
+}
 
 export const WritePage = ({ entry = {}, initialDialogState = false }) => {
     
@@ -97,7 +116,7 @@ export const WritePage = ({ entry = {}, initialDialogState = false }) => {
                         placeholder="Untitled"
                         >    
                     </input>
-                    <span style={{alignSelf: 'center'}}>Location String Here</span>
+                    <span style={{alignSelf: 'center', fontStyle: 'underline'}}>{'Choose Location'}</span>
                 </div>
                 <Dialog open={openDialog} onClose={handleCloseDialog}>
                     <DialogTitle>{dialogAction.ACTION_TITLE}</DialogTitle>
