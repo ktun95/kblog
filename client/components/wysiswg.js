@@ -11,6 +11,7 @@ import { Button,
 import { PublishOutlined, Save, Delete } from '@mui/icons-material'
 import axios from 'axios'
 import '../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
+import { flexbox } from '@mui/system';
 
 // const DraftModal = ({ action, dialogState, setDialogState }) => {
 
@@ -63,7 +64,6 @@ export const WritePage = ({ entry = {}, initialDialogState = false }) => {
         setEntryTitle(e.target.value)
     }
 
-    //modify this function to account for whether the post is being saved as a draft or published
     const handleSubmit = async ({ publish = false }) => {
         const newEntry = {
             title: entryTitle,
@@ -89,15 +89,16 @@ export const WritePage = ({ entry = {}, initialDialogState = false }) => {
 
     return(
         <React.Fragment>
-                <input 
-                    id="entry-title"
-                    value={entryTitle}
-                    onChange={handleChange}
-                    placeholder="Untitled"
-                    >
-                    
-                    
-                </input>
+                <div style={{display: 'flex', justifyContent: 'space-between', paddingBottom: '0.5rem'}}>
+                    <input 
+                        id="entry-title"
+                        value={entryTitle}
+                        onChange={handleChange}
+                        placeholder="Untitled"
+                        >    
+                    </input>
+                    <span style={{alignSelf: 'center'}}>Location String Here</span>
+                </div>
                 <Dialog open={openDialog} onClose={handleCloseDialog}>
                     <DialogTitle>{dialogAction.ACTION_TITLE}</DialogTitle>
                     <DialogContent>

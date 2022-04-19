@@ -33,10 +33,10 @@ import { Container,
 const routes = {
     "Map": '/map',
     "Country": {
-        "All": 'country/all',
-        "South Korea": 'country/korea',
-        "USA": 'country/usa',
-        "China": 'country/china',
+        "All": 'posts/country/all',
+        "South Korea": 'posts/country/korea',
+        "USA": 'posts/country/usa',
+        "China": 'posts/country/china',
     }
 }
 
@@ -116,7 +116,8 @@ export const Main = () => {
                     <Route path="/map" element={<Map places={places} showMap={showMap} setSelected={setSelected}/>} />                            
                     <Route path="/posts/drafts/" element={<Browse routes={routes} entries={places.filter(entry => !entry.published || entry.published == 'false')} />} />
                     <Route path="/posts/drafts/:postId" element={<Entry />} />
-                    <Route path="/posts/country/:countryCode" element={<Browse routes={routes} />} />                         
+                    <Route path="/posts/:postId" element={<Entry />} />                         
+                    <Route path="/posts/country/:countryCode" element={<Browse routes={routes} entries={places} />} />                         
                     {/* <Route path="/posts/country/:countryCode/:id" element={<EntryWrite />} />                          */}
                     {/* <Route path="/country/sk/test">
                         {places.length ? <Entry selected={places[0]} /> : null}

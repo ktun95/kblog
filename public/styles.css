@@ -46,8 +46,8 @@ img:not(.adjustable) {
     margin-bottom: 0.5rem;
 } */
 #entry-title {
-    display: block;
-    margin-bottom: 0.5rem;
+    /* display: block; */
+    /* margin-bottom: 0.5rem; */
     border-width: 0px;
     font-size: 3rem;
 }

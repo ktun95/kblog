@@ -7,7 +7,7 @@ import {
     ListItemIcon,
     ListItemText } from '@mui/material'
 
-export const CollapsingMenuList = props => {
+export const CollapsingMenuList = ({ countries }) => {
     const [open, setOpen] = useState(true)
     let navigate = useNavigate()
 
@@ -23,9 +23,9 @@ export const CollapsingMenuList = props => {
                 </ListItemText>
             </ListItemButton>
             <Collapse in={open}>
-                {Object.keys(props.countries).map(c => {
+                {Object.keys(countries).map(c => {
                     return (
-                        <ListItemButton key={c} onClick={() => navigate(props.countries[c])}>
+                        <ListItemButton key={c} onClick={() => navigate(countries[c])}>
                             <ListItemText primary={c} key={c} />
                         </ListItemButton>
                     )

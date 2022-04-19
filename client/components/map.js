@@ -1,5 +1,5 @@
-import { ConstructionOutlined } from '@mui/icons-material';
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'
 
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1Ijoia3Z0dW4iLCJhIjoiY2twcWQ1bHpsMGdocDJ2cXpxeWV4dmpwcSJ9.UEvqdwV4QQ_im2CGNQAGSQ';
 const defaultCords = [35.17, 129.08]; //should be set 
@@ -9,6 +9,8 @@ export const Map = (props) => { // {places, setSelected}
     const [initialCords, setInitialCords] = useState(defaultCords);
     // const [inView, setInView] = useState({})
     const [markers, setMarkers] = useState([])
+    const navigate = useNavigate()
+
     let mymap;
     let myRepeatingMarkers = L.gridLayer.repeatedMarkers()
     
@@ -29,7 +31,9 @@ export const Map = (props) => { // {places, setSelected}
             const newMarker = L.marker(coordinates)
             newMarker.on('click', () => {
                 // console.log('Setting selected place to ', p)
-                props.setSelected(p)})
+                // props.setSelected(p)
+                navigate(`/posts/${p._id}`)
+            })
 
             myRepeatingMarkers.addMarker(newMarker)
             // newMarker.addTo(mapObj)
@@ -51,8 +55,8 @@ export const Map = (props) => { // {places, setSelected}
                 maxZoom: 18,
                 minZoom: 3,
                 maxBounds: [
-                    [-90, -270],
-                    [90, 270]
+                    [-90, -180],
+                    [90, 180]
                 ]
             }).setView(initialCords, 6) 
                 
