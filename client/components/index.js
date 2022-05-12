@@ -1,5 +1,6 @@
 export { Main } from './main';
 export { Map } from './map';
+export { GoogleMap } from './GoogleMap';
 export { Drawer } from './drawer';
 export { ContentContainer } from './contentContainer';
 export { EntryWrite } from './entryWrite';

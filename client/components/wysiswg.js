@@ -2,16 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertToRaw } from "draft-js";
 import draftToHtml from 'draftjs-to-html';
-import { Button,
+import { Autocomplete,
+         Button,
+         IconButton,
          TextField,
          Dialog,
          DialogActions,
          DialogContent,
          DialogTitle } from '@mui/material'
-import { PublishOutlined, Save, Delete } from '@mui/icons-material'
+import { PublishOutlined, Save, Delete, Map } from '@mui/icons-material'
 import axios from 'axios'
 import '../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
-import { flexbox } from '@mui/system';
 
 // const DraftModal = ({ action, dialogState, setDialogState }) => {
 
@@ -26,23 +27,58 @@ import { flexbox } from '@mui/system';
 //     )
 // }
 
-const LocationDialog = () => {
+const LocationDialog = ({ open, onClose, handleCloseLocationDialog }) => {
+    const [searchString, setSearchString] = useState('')
+    const [predictions, setPredictions] = useState([])    
+    const [location, setLocation] = useState('')
+    
+    
+    const displayPlacePredictions = (string) => {
+        if (string && string.length < 3) return
+        
+        const service = new google.maps.places.AutocompleteService()
+        service.getPlacePredictions({input: searchString}, (p)=> setPredictions(p)) 
+
+    }
+
+    const handleSearchChange = e => {
+        setSearchString(e.target.value)
+    }
+    
+    useEffect(() => {
+        displayPlacePredictions(searchString)
+    }, [searchString])
+
     return (
-        <Dialog>
+        <Dialog open={open} onClose={onClose}>
             <DialogTitle>Location</DialogTitle>
             <DialogContent>
-                <TextField
+                <Autocomplete
                     autoFocus
                     // margin="dense"
                     // id="name"
-                    label="Title"
+                    label="Place"
                     // type="email"
-                    fullWidth
-                    variant="standard"
-                    value={entryTitle}
-                    onChange={handleChange}
+                    // autoComplete='off'
+                    freeSolo={true}
+                    // size={medium}
+                    // variant="standard"
+                    value={searchString}
+                    onChange={handleSearchChange}
+                    options={predictions.map(p => p.description)}
+                    renderInput={(params) => <TextField {...params} fullWidth label="Place" variant="standard" />}
                 />
+                {/* <IconButton>
+                    <Map />
+                </IconButton> */}
+            {/* <ul>
+                {predictions.map(p => <li>{p.description}</li>)}
+            </ul> */}
             </DialogContent>
+            <DialogActions>
+                <Button onClick={handleCloseLocationDialog}>Cancel</Button>
+                {/* <Button onClick={() => handleSubmit(dialogAction.ACTION_TITLE === 'Publish' ? {publish: true} : {publish: false})}>{dialogAction.ACTION_TITLE}</Button> */}
+            </DialogActions>    
         </Dialog>
     )
 }
@@ -55,7 +91,9 @@ export const WritePage = ({ entry = {}, initialDialogState = false }) => {
     }
     
     const [ entryTitle, setEntryTitle ] = useState(entry.title || '')
+    const [ locationString, setLocationString ] = useState('')
     const [ editorState, setEditorState ] = useState(EditorState.createEmpty())
+    const [ openLocationDialog, setOpenLocationDialog ] = useState(false)
     const [ openDialog, setOpenDialog ] = useState(initialDialogState)
     const [ dialogAction, setDialogAction ] = useState(dialogActions['save'])
 
@@ -72,6 +110,14 @@ export const WritePage = ({ entry = {}, initialDialogState = false }) => {
     const handlePublishModal = () => {
         setDialogAction(dialogActions['publish'])
         setOpenDialog(true)
+    }
+
+    const handleLocationModal = () => {
+        setOpenLocationDialog(true)
+    }
+
+    const handleCloseLocationDialog = () => {
+        setOpenLocationDialog(false)
     }
 
     const handleCloseDialog = () => {
@@ -116,8 +162,9 @@ export const WritePage = ({ entry = {}, initialDialogState = false }) => {
                         placeholder="Untitled"
                         >    
                     </input>
-                    <span style={{alignSelf: 'center', fontStyle: 'underline'}}>{'Choose Location'}</span>
+                    <a onClick={handleLocationModal} style={{alignSelf: 'center', textDecoration: 'underline'}}>{'Choose Location'}</a>
                 </div>
+                <LocationDialog open={openLocationDialog} onClose={handleCloseLocationDialog}/>
                 <Dialog open={openDialog} onClose={handleCloseDialog}>
                     <DialogTitle>{dialogAction.ACTION_TITLE}</DialogTitle>
                     <DialogContent>
