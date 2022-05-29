@@ -33,11 +33,15 @@ const LocationDialog = ({ open, onClose, handleCloseLocationDialog }) => {
     const [location, setLocation] = useState('')
     
     
-    const displayPlacePredictions = (string) => {
+    const displayPlacePredictions = async (string) => {
         if (string && string.length < 3) return
-        
-        const service = new google.maps.places.AutocompleteService()
-        service.getPlacePredictions({input: searchString}, (p)=> setPredictions(p)) 
+        try {
+            const service = new google.maps.places.AutocompleteService()
+            await service.getPlacePredictions({input: searchString}, (predictionsObject)=> setPredictions(predictionsObject)) 
+            console.log(predictions)
+        } catch (err) {
+            console.error(err.message, '\n', err.stack)
+        }
 
     }
 

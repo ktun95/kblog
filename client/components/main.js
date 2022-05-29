@@ -43,7 +43,7 @@ const routes = {
 
 export const Main = () => {
     // const [showMap, setShowMap] = useState(true)
-    const [map, setMap] = useState = ({})
+    const [map, setMap] = useState({})
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [selected, setSelected] = useState({})
