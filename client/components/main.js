@@ -4,6 +4,7 @@ import { Routes,
          useNavigate } from 'react-router-dom';
 import axios from 'axios'
 import { Map,
+         GoogleMap,
          ContentContainer,
          WritePage,
          ExampleEntry,
@@ -41,7 +42,8 @@ const routes = {
 }
 
 export const Main = () => {
-    const [showMap, setShowMap] = useState(true)
+    // const [showMap, setShowMap] = useState(true)
+    const [map, setMap] = useState({})
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [selected, setSelected] = useState({})
@@ -113,7 +115,7 @@ export const Main = () => {
                 <Routes>
                     {/* <Route path='/login' element={<Login user={user} setUser={setUser} />} />                     */}
                     <Route path="/new" element={<WritePage />} />
-                    <Route path="/map" element={<Map places={places} showMap={showMap} setSelected={setSelected}/>} />                            
+                    <Route path="/map" element={<GoogleMap places={places} setSelected={setSelected} />} />                            
                     <Route path="/posts/drafts/" element={<Browse routes={routes} entries={places.filter(entry => !entry.published || entry.published == 'false')} />} />
                     <Route path="/posts/drafts/:postId" element={<Entry />} />
                     <Route path="/posts/:postId" element={<Entry />} />                         
