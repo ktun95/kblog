@@ -15,7 +15,7 @@ export const Browse = ({ routes, entries }) => {
     let navigate = useNavigate()
     
     const handleClick = (entryId) => {
-        navigate(`${entryId}`, {replace: false} )
+        navigate(`/posts/${entryId}`, {replace: false} )
     }
     // const fetchPosts = (uri) => {
     //     const posts = axios({

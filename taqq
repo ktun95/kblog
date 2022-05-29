@@ -1,0 +1,351 @@
+[33mcommit 13361086a9213bd67c0c3ff40f1e3b7c04956016[m[33m ([m[1;36mHEAD -> [m[1;32mgoogle-maps[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/heroku[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m, [m[1;32mheroku[m[33m)[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Tue Apr 19 14:28:10 2022 -0500
+
+    removing node_modules from repo
+
+[33mcommit e69e2a8262a1d9392c241db2566b6e263e1aa810[m[33m ([m[1;31mheroku/master[m[33m)[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Tue Apr 19 13:09:06 2022 -0500
+
+    positioned location data text in write component
+
+[33mcommit 6530254e8a79e371695f9ab8e30ab5547fcd7b53[m[33m ([m[1;32mrepeatedmarkers-fix[m[33m)[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Thu Apr 14 16:19:31 2022 -0500
+
+    repeated markers fixed
+
+[33mcommit 69e720dacc178fba9aa577899824e26ae7567e28[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Thu Apr 14 14:12:06 2022 -0500
+
+    draft browsing page functional
+
+[33mcommit ebe0c149663e36e92eec136e7bea86965decc721[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Mon Apr 11 15:48:24 2022 -0500
+
+    entry editor taking form
+
+[33mcommit 8ec2524b7f1aaf0ad82978e9cba306944d804323[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Sat Apr 9 04:48:47 2022 +0900
+
+    stuff
+
+[33mcommit 539a31ea365ee34b621eeb1c22c5ca6c1695a148[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Sun Feb 27 13:25:46 2022 +0900
+
+    upgraded react-router-dom to V6, added routing to app
+
+[33mcommit e3778e6939e385e20872480213a073ac4a3d8ceb[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Sat Feb 26 19:28:54 2022 +0900
+
+    buncha stuff
+
+[33mcommit cb3ae91bef8696be491dee92402a985ed3606285[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Wed Nov 24 05:36:04 2021 +0900
+
+    Fixed bug where editing a post would automatically change the location to the user's current location
+
+[33mcommit 02c9e3a9e2b570a6e8a93ac49902626487d10264[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Wed Nov 24 05:17:50 2021 +0900
+
+    Fixed bug where a newly selected entry's images would not be loaded, causing the previously selected entry's respective images to be rendered instead. Done by adding the 'selected' prop to the dependency array of the effecthook that fetched the images.
+
+[33mcommit d0a32a1ea981d877f26d1190cd3e8bfa36c49a08[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Wed Nov 24 05:11:39 2021 +0900
+
+    Removed time stamp on ExampleEntry
+
+[33mcommit 46c509fb868d66eaf8823e592eef93c60cfce032[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Wed Nov 24 05:09:26 2021 +0900
+
+    Fixed bug caused by incorrectly importing an Icon from the Material-ui library, resulting in a failure to render the Entry component in write mode.
+
+[33mcommit 90f8fad0489832d7ad82ca6992c395671c924280[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Wed Nov 24 04:57:10 2021 +0900
+
+    Added developer comment on the ExampleEntry component used as a landing page
+
+[33mcommit 5cd302972aca8b8037874eb7cc37fd1080357629[m
+Merge: c83803a e72700b
+Author: unknown <kevintun01@gmail.com>
+Date:   Wed Nov 24 04:44:36 2021 +0900
+
+    Merge branch 'full-crud' into heroku
+
+[33mcommit e72700bbb72dc77bad177cde1b18ce60fac8dcb4[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Wed Nov 24 04:44:21 2021 +0900
+
+    API route for deleting individual posts has been defined on backend, but the route has not been exposed on front-end ui yet
+
+[33mcommit b11e89619015e78353b32fbab856fada90f9dae8[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Wed Nov 24 03:48:54 2021 +0900
+
+    Map now closes on scroll of ContentContainer
+
+[33mcommit 62ebb3fbaa24a8517a6603c22599c968b960d3b2[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Wed Nov 24 02:55:18 2021 +0900
+
+    Entry component has been transformed with features from the now obsolete Write component; the former is now used exclusively for both reading and writing posts, using the isWriteMode prop from Main to switch modes. Also, updating posts is now possible, but buggy."
+
+[33mcommit c83803a7413ce0f209afd9eff3758b9e9cacb646[m
+Merge: b171e3a 1970e82
+Author: unknown <kevintun01@gmail.com>
+Date:   Mon Nov 22 11:31:10 2021 +0900
+
+    Merge branch 'full-crud' into heroku
+
+[33mcommit 1970e827ba99330be770c115f310f98f4545f72c[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Mon Nov 22 11:30:31 2021 +0900
+
+    Image data is now only fetched when a user selects a post, instead of all at once on initial load.
+
+[33mcommit b179972f3c406732f88906e2bcf0385060395bd0[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Thu Nov 18 13:02:53 2021 +0900
+
+    Added projection to MongoDB driver query to exclude images from /posts/all GET request. Server no longer sends all images immediately. New logic for loading images when a post is selected still needs to be implemented.
+
+[33mcommit 15f281362882136767db44a983c759313c19cf2c[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Thu Nov 18 09:47:52 2021 +0900
+
+    Initialized express endpoint for /:id/images to keep images in a separate field on MongoDB
+
+[33mcommit b171e3ae47ca6b22b2df51b148b9846a203fed4c[m
+Merge: adc5c5e f9ab82b
+Author: unknown <kevintun01@gmail.com>
+Date:   Tue Nov 16 14:35:14 2021 +0900
+
+    merging changes from full-crud branch; includes new config set-up
+
+[33mcommit f9ab82b404847381c76ecd308d9252ebf65504fb[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Tue Nov 16 14:31:18 2021 +0900
+
+    New IconButton for image upload made operational by adding component=span attribute. Changed position style of some components of the image editor to absolute and 100% instead of fixed and 100vw/vh to make more compatible with current desktop view. Needs more work to make functional on desktop.
+
+[33mcommit 8d3b7047a6d87622b1940e99a4c7cabb637ba4da[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Thu Nov 11 12:39:19 2021 +0900
+
+    Posts can now read and rendered on the front end, including images. Still needs refactoring
+
+[33mcommit 51d57df2ff73efc3855962fd94f040bde716c59f[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Thu Nov 11 10:38:34 2021 +0900
+
+    Post route is operational; creates document in mongoDB. Still requires proper field validation
+
+[33mcommit 26a969ab5c949823a104fc84a4755cb61c6b3613[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Wed Nov 10 21:28:19 2021 +0900
+
+    commented-out margin styling on children of content-container. Should apply to a closer ancestor of the post/entry items
+
+[33mcommit 57fb6d8505ca422b4242ffb6462a986fe5019828[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Tue Nov 9 12:50:18 2021 +0900
+
+    configurations to use local environmental variables in dev mode
+
+[33mcommit adc5c5e835012f1a403a090d9e28564d7c94df9a[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Tue Nov 2 14:43:57 2021 +0900
+
+    added logging to server to see what process.env.PORT is
+
+[33mcommit 63ddc4eb7d51f0954044bb7d4c5f898cad3a3d46[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Tue Nov 2 14:33:49 2021 +0900
+
+    another procfile thing
+
+[33mcommit ad80f1692844e40b44c8118a75c114169a6e245a[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Tue Nov 2 14:29:11 2021 +0900
+
+    changed heroku procfile, maybe this will help?
+
+[33mcommit 030f425e5ff0479c530290827715b44aedada3be[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Tue Nov 2 14:09:20 2021 +0900
+
+    changed db credentials to use env variables
+
+[33mcommit 8091bb74433199ff4a6f883ff96af360c60f9733[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Fri Oct 29 14:46:12 2021 +0900
+
+    updated procfile
+
+[33mcommit 3ab484d35cccd7f78069f016817d054ccf277619[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Fri Oct 29 14:05:04 2021 +0900
+
+    changed start command in package.json... again
+
+[33mcommit 65442e4d089ef14101088641b14219ea3d2d8b5e[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Fri Oct 29 14:00:50 2021 +0900
+
+    changed start command in package.json
+
+[33mcommit c3f5d1ce550cf8a60e2bd210a6a1a04d046241ed[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Fri Oct 29 13:38:41 2021 +0900
+
+    fixed entry export in components index
+
+[33mcommit d25db4f443d1c45e1dceff32bbb405402743fd98[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Fri Oct 29 13:35:24 2021 +0900
+
+    added core-js
+
+[33mcommit ac852ec05dd772ca314fe40fe6f45a1bdd199470[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Fri Oct 29 13:20:09 2021 +0900
+
+    added heroku procfile
+
+[33mcommit 96328cec5252e7d150973da5c9eaa33d750fc0d6[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Fri Oct 22 14:10:44 2021 +0900
+
+    ignoring bundle.js now?
+
+[33mcommit 077fa08db304a689ba4cb32e71f1a9f37976deea[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Fri Oct 22 14:04:16 2021 +0900
+
+    removed media queries for now, needs refactoring
+
+[33mcommit df37f5e9a5b4b4d7e7a0cfc1fb11d8702ea467ae[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Thu Oct 21 19:21:14 2021 +0900
+
+    image now renders in correct position in the write component, added temp media queries for browser
+
+[33mcommit 9b6fe0ce494dc227d2d6c3e8db74510749502840[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Thu Oct 14 13:50:10 2021 +0900
+
+    moved calculation of original aspect ratio to touchstart event handler so clientHeight would be non-zero, ero. still needs improvement
+
+[33mcommit 50f14ab44151eb04b361cefea71d05159b02d4b3[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Wed Oct 13 22:24:49 2021 +0900
+
+    added public/bundle.js to gitignore
+
+[33mcommit 9de3c09a6c5cd598062bc0fed2e9bf31f566a7f3[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Wed Oct 13 22:21:17 2021 +0900
+
+    added passive:true to touchmove listener, preventDEfault works!
+
+[33mcommit 60493794b73b79fce08614ad170b4f5217e250f2[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Tue Oct 12 14:18:12 2021 +0900
+
+    added bundle.js to gitignore
+
+[33mcommit 567d61cca0b03cf2d15621465d1fc4d888b6e851[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Tue Oct 12 14:13:57 2021 +0900
+
+    adjustable image component can be moved and resized, but still scrolls the page
+
+[33mcommit fd2a71c640303c1647cb4a9893272d5c6a68064f[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Thu Sep 16 23:42:03 2021 +0900
+
+    ugh
+
+[33mcommit dbecc4296e1be0322536f3febe1cc1e41050f70d[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Tue Sep 14 21:32:06 2021 +0900
+
+    lotta changes
+
+[33mcommit ec74f43f72fcd57bc27a93fa0704cefed6d330bc[m
+Author: unknown <kevintun01@gmail.com>
+Date:   Fri Jul 9 03:21:52 2021 +0900
+
+    a bunch of stuff, starting to come together, i guess
+
+[33mcommit 322f5825913f1dd53a1649dda228d726b8cd7b13[m
+Merge: a8e416e d67be32
+Author: Kevin Tun <kevintun01@gmail.com>
+Date:   Tue Jul 14 15:01:06 2020 -0500
+
+    Merge branch 'master' of https://github.com/ktun95/react-project
+
+[33mcommit a8e416e37fcd586a6696ac6d9bed43d9a04cb229[m
+Author: Kevin Tun <kevintun01@gmail.com>
+Date:   Tue Jul 14 15:00:30 2020 -0500
+
+    a lil sumn sumn
+
+[33mcommit d67be321a43e47755b2bbc8259f515bfe3d1a0a0[m
+Author: Kevin Tun <kevintun01@gmail.com>
+Date:   Mon May 18 19:17:18 2020 -0500
+
+    Revert "first commit"
+    
+    This reverts commit b0718e355e5bb41fa954b9fc95387f0bb3ca2989.
+
+[33mcommit bfb6dd23483d635e221f2117c46d2b59e039b075[m
+Author: Kevin Tun <kevintun01@gmail.com>
+Date:   Mon May 18 19:16:18 2020 -0500
+
+    Revert "Revert "added server""
+    
+    This reverts commit 650dedddcad1022f3e175b39cfe24a15ba654cfa.
+
+[33mcommit 650dedddcad1022f3e175b39cfe24a15ba654cfa[m
+Author: Kevin Tun <kevintun01@gmail.com>
+Date:   Mon May 18 19:14:57 2020 -0500
+
+    Revert "added server"
+    
+    This reverts commit 59f39313441e1715675e0dccab91abf169b6a2d8.
+
+[33mcommit b0718e355e5bb41fa954b9fc95387f0bb3ca2989[m
+Author: Kevin Tun <kevintun01@gmail.com>
+Date:   Mon May 18 19:09:04 2020 -0500
+
+    first commit
+
+[33mcommit 59f39313441e1715675e0dccab91abf169b6a2d8[m
+Author: Kevin Tun <kevintun01@gmail.com>
+Date:   Tue May 12 14:35:15 2020 -0500
+
+    added server
+
+[33mcommit beab8210d765cc5da3f565e7160f569fa862f269[m
+Author: Kevin Tun <kevintun01@gmail.com>
+Date:   Mon Feb 24 14:39:00 2020 -0600
+
+    added babel config
+
+[33mcommit 5331620c2dfb4150f179b893a84b633e0f123965[m
+Author: Kevin Tun <kevintun01@gmail.com>
+Date:   Mon Feb 24 14:23:11 2020 -0600
+
+    First commit
