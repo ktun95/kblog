@@ -41,7 +41,9 @@ const routes = {
     }
 }
 
+
 export const Main = () => {
+    const drawerWidth = "10rem"
     // const [showMap, setShowMap] = useState(true)
     const [map, setMap] = useState({})
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
@@ -104,8 +106,8 @@ export const Main = () => {
                     <Map places={places} showMap={showMap} setSelected={setSelected}/>
                 </AccordionDetails>
             </Accordion> */}
-            <MyAppBar toggleDrawer={toggleDrawer} />
-            <MyDrawer toggleDrawer={toggleDrawer} isDrawerOpen={isDrawerOpen} routes={routes} />
+            <MyAppBar toggleDrawer={toggleDrawer} isDrawerOpen={isDrawerOpen} drawerWidth={drawerWidth}/>
+            <MyDrawer toggleDrawer={toggleDrawer} isDrawerOpen={isDrawerOpen} drawerWidth={drawerWidth} routes={routes} />
             <Container sx={{
                 padding: "1rem",
                 // overflowY: "auto",
@@ -113,13 +115,14 @@ export const Main = () => {
                 maxWidth: "100%"
             }}>
                 <Routes>
-                    {/* <Route path='/login' element={<Login user={user} setUser={setUser} />} />                     */}
+                    <Route path='/login' element={<Login />} />                    
                     <Route path="/new" element={<WritePage />} />
                     <Route path="/map" element={<GoogleMap places={places} setSelected={setSelected} />} />                            
                     <Route path="/posts/drafts/" element={<Browse routes={routes} entries={places.filter(entry => !entry.published || entry.published == 'false')} />} />
                     <Route path="/posts/drafts/:postId" element={<Entry />} />
                     <Route path="/posts/:postId" element={<Entry />} />                         
                     <Route path="/posts/country/:countryCode" element={<Browse routes={routes} entries={places} />} />                         
+                    <Route index element={<GoogleMap places={places} setSelected={setSelected} />} />                            
                     {/* <Route path="/posts/country/:countryCode/:id" element={<EntryWrite />} />                          */}
                     {/* <Route path="/country/sk/test">
                         {places.length ? <Entry selected={places[0]} /> : null}

@@ -79,11 +79,12 @@ router.post('/', async (req, res, next) => {
     
     console.dir(req.body)
 
+    const date = new Date()
     //maybe put in some real validation at some point...
     const newEntry = {
         title: req.body.title || 'untitled',
-        coordinates: req.body.coordinates || null,
-        publishDate: req.body.publishDate || null,
+        location: req.body.location || null,
+        publishDate: (req.body.publish ? new Date() : null),
         postContents: req.body.postContents || '',
         images: req.body.images || []
     }

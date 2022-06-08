@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom'
 import { Container,
+         Box,
+         Card,   
+         CardContent,
+         CardActions,
          TextField, 
-         Button } from '@mui/material'
+         Button,
+         Typography } from '@mui/material'
 import axios from 'axios'
 // import { makeStyles } from '@mui/styles'
 
@@ -15,25 +20,40 @@ import axios from 'axios'
 export const Login = (props) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [usernameError, setUsernameError] = useState(false)
+    const [passwordError, setPasswordError] = useState(false)
     const [errorString, setErrorString] = useState('')
 
     const handleChange = (e, cb) => {
         cb(e.target.value)
     }
     
-    const login = async () => { 
-        if (!username || !password) {
-            setErrorString('Please enter username and password')
-        } 
+    const isValid = () => {
+        if (username && password) return true
 
-        const response = await axios({
-            method: 'post',
-            url: '/auth/login',
-            data: {
-                username,
-                password
+        if (!username) setUsernameError(true)
+        if (!password) setPasswordError(true)
+
+        return false
+    }
+
+    const login = async () => { 
+
+        if (isValid()) {
+            try {
+                const response = await axios({
+                    method: 'post',
+                    url: '/auth/login',
+                    data: {
+                        username,
+                        password
+                    }
+                })
+            } catch (err) {
+                console.error(err)
             }
-        })
+        }
+
         
         await props.setUser(response.data.username)
     }
@@ -43,15 +63,42 @@ export const Login = (props) => {
     return (
         props.user ? 
             <Redirect to='/' /> : 
-            <Container>
-                <div>
-                    <TextField label="Username" required={true} onChange={(e) => handleChange(e, setUsername)}>{username}</TextField>
-                </div>
-                <div>
-                    <TextField label="Password" required={true} onChange={(e) => handleChange(e, setPassword)}>{password}</TextField>
-                </div>
-                <Button onClick={login}>Log In</Button>
-                <span></span>
+            <Container maxWidth="sm">
+                <Card>
+                    <CardContent>
+                        <Typography variant="h4" component="h1">Login</Typography>
+                        <TextField
+                            id="username-input"
+                            label="Username"
+                            helperText={usernameError ? "Please enter your username" : " "}
+                            error={usernameError}
+                            autoFocus
+                            fullWidth={true}
+                            margin="dense"
+                            size='small'
+                            required={true}
+                            onFocus={()=> setUsernameError(false)}    
+                            onChange={(e) => handleChange(e, setUsername)}>
+                                {username}
+                        </TextField>                
+                        <TextField
+                            id="password-input"
+                            label="Password"
+                            helperText={passwordError ? "Please enter your password" : " "}
+                            error={passwordError}
+                            fullWidth={true}
+                            margin="dense"
+                            size='small'
+                            required={true}
+                            onFocus={()=> setPasswordError(false)}    
+                            onChange={(e) => handleChange(e, setPassword)}>
+                                {password}
+                        </TextField>                
+                    </CardContent>
+                    <CardActions>
+                        <Button onClick={login}>Log In</Button>
+                    </CardActions>
+                </Card>
             </Container>  
     )
 }

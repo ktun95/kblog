@@ -13,7 +13,7 @@ import { Autocomplete,
 import { PublishOutlined, Save, Delete, Map } from '@mui/icons-material'
 import axios from 'axios'
 import '../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
-
+import {v4 as uuidv4 } from 'uuid'
 // const DraftModal = ({ action, dialogState, setDialogState }) => {
 
 //     const handleClose = () => {
@@ -27,34 +27,51 @@ import '../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 //     )
 // }
 
-const LocationDialog = ({ open, onClose, handleCloseLocationDialog }) => {
+
+const LocationDialog = ({
+        open,
+        onClose,
+        handleCloseLocationDialog,
+        handleConfirmLocation,
+        location,
+        setLocation }) => {
     const [searchString, setSearchString] = useState('')
     const [predictions, setPredictions] = useState([])    
-    const [location, setLocation] = useState('')
-    
+    const [selected, setSelected] = useState({})
+    // const sessionToken = uuidv4
     
     const displayPlacePredictions = async (string) => {
-        if (string && string.length < 3) return
+        console.log('displayPlacePredictions')
+        
+        if (!string || (string && string.length < 1)) return
+        
         try {
             const service = new google.maps.places.AutocompleteService()
-            await service.getPlacePredictions({input: searchString}, (predictionsObject)=> setPredictions(predictionsObject)) 
-            console.log(predictions)
+            await service.getPlacePredictions({input: string}, (predictionsObject)=> setPredictions(predictionsObject)) 
         } catch (err) {
             console.error(err.message, '\n', err.stack)
         }
-
     }
 
-    const handleSearchChange = e => {
-        setSearchString(e.target.value)
+    const handleInputChange = e => {
+        console.log('handle INPUT change', e)
+        if (e) setSearchString(e.target.value)
+    }
+
+    const handleChange = (e, val) => {
+        setSelected(val)
     }
     
     useEffect(() => {
         displayPlacePredictions(searchString)
+        
+        return (
+            console.log(predictions)
+        )
     }, [searchString])
 
     return (
-        <Dialog open={open} onClose={onClose}>
+        <Dialog fullWidth   open={open} onClose={onClose}>
             <DialogTitle>Location</DialogTitle>
             <DialogContent>
                 <Autocomplete
@@ -67,9 +84,12 @@ const LocationDialog = ({ open, onClose, handleCloseLocationDialog }) => {
                     freeSolo={true}
                     // size={medium}
                     // variant="standard"
-                    value={searchString}
-                    onChange={handleSearchChange}
-                    options={predictions.map(p => p.description)}
+                    // value={searchString}
+                    // inputValue={searchString}
+                    onInputChange={handleInputChange}
+                    onChange={handleChange}
+                    options={predictions || []}
+                    getOptionLabel={options => options.description}
                     renderInput={(params) => <TextField {...params} fullWidth label="Place" variant="standard" />}
                 />
                 {/* <IconButton>
@@ -81,6 +101,7 @@ const LocationDialog = ({ open, onClose, handleCloseLocationDialog }) => {
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleCloseLocationDialog}>Cancel</Button>
+                <Button onClick={() => { handleConfirmLocation(selected) }}>OK</Button>
                 {/* <Button onClick={() => handleSubmit(dialogAction.ACTION_TITLE === 'Publish' ? {publish: true} : {publish: false})}>{dialogAction.ACTION_TITLE}</Button> */}
             </DialogActions>    
         </Dialog>
@@ -95,7 +116,7 @@ export const WritePage = ({ entry = {}, initialDialogState = false }) => {
     }
     
     const [ entryTitle, setEntryTitle ] = useState(entry.title || '')
-    const [ locationString, setLocationString ] = useState('')
+    const [ location, setLocation ] = useState({})
     const [ editorState, setEditorState ] = useState(EditorState.createEmpty())
     const [ openLocationDialog, setOpenLocationDialog ] = useState(false)
     const [ openDialog, setOpenDialog ] = useState(initialDialogState)
@@ -123,6 +144,20 @@ export const WritePage = ({ entry = {}, initialDialogState = false }) => {
     const handleCloseLocationDialog = () => {
         setOpenLocationDialog(false)
     }
+    
+    const handleConfirmLocation = async (locationObj) => {
+        const geocoder = new google.maps.Geocoder()
+        const geocode = await geocoder.geocode({placeId: locationObj.place_id})
+        const data = geocode.results[0]
+        
+        data.full_address = locationObj.description
+        data.geometry.location.lat = data.geometry.location.lat()
+        data.geometry.location.lng = data.geometry.location.lng()
+        
+        console.log(data)
+        setLocation(data)
+        handleCloseLocationDialog()
+    }
 
     const handleCloseDialog = () => {
         setOpenDialog(false)
@@ -136,6 +171,7 @@ export const WritePage = ({ entry = {}, initialDialogState = false }) => {
     const handleSubmit = async ({ publish = false }) => {
         const newEntry = {
             title: entryTitle,
+            location,
             postContents: draftToHtml(convertToRaw(editorState.getCurrentContent())),
             publish
         }
@@ -166,9 +202,15 @@ export const WritePage = ({ entry = {}, initialDialogState = false }) => {
                         placeholder="Untitled"
                         >    
                     </input>
-                    <a onClick={handleLocationModal} style={{alignSelf: 'center', textDecoration: 'underline'}}>{'Choose Location'}</a>
+                    <a onClick={handleLocationModal} style={{alignSelf: 'center', textDecoration: 'underline'}}>{ location.full_address || 'Choose Location'}</a>
                 </div>
-                <LocationDialog open={openLocationDialog} onClose={handleCloseLocationDialog}/>
+                <LocationDialog
+                    open={openLocationDialog}
+                    onClose={handleCloseLocationDialog}
+                    handleCloseLocationDialog={handleCloseLocationDialog}
+                    handleConfirmLocation={handleConfirmLocation}
+                    location={location}
+                    setLocation={setLocation} />
                 <Dialog open={openDialog} onClose={handleCloseDialog}>
                     <DialogTitle>{dialogAction.ACTION_TITLE}</DialogTitle>
                     <DialogContent>

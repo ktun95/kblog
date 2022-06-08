@@ -8,11 +8,14 @@ import { CollapsingMenuList } from '.'
 import { useNavigate } from 'react-router-dom'
 
 export const MyDrawer = props => {
-    const { isDrawerOpen, toggleDrawer, routes } = props 
+    const { isDrawerOpen, toggleDrawer, routes, drawerWidth } = props 
     const navigate = useNavigate()
 
     return (
-        <Drawer anchor="left" open={isDrawerOpen} variant="persistent">
+        <Drawer sx={{width: drawerWidth, '& .MuiDrawer-paper': {
+            width: drawerWidth,
+            boxSizing: 'border-box',
+          },}} anchor="left" open={isDrawerOpen} variant="persistent" >
             <Toolbar>
                 <Button variant="text" color="inherit" onClick={toggleDrawer}> = </Button>
             </Toolbar>
