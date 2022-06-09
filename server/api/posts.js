@@ -83,7 +83,7 @@ router.post('/', async (req, res, next) => {
     //maybe put in some real validation at some point...
     const newEntry = {
         title: req.body.title || 'untitled',
-        location: req.body.location || null,
+        place: req.body.place || null,
         publishDate: (req.body.publish ? new Date() : null),
         postContents: req.body.postContents || '',
         images: req.body.images || []
