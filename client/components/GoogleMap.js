@@ -1,32 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'
 
-export const GoogleMap = ({ places, setSelected }) => {
+export const GoogleMap = ({ entries, setSelected }) => {
     let googleMap;
     const [map, setMap] = useState({})
     const navigate = useNavigate()
 
-    const addMarkers = (mapObj, placesArray = []) => {
-        placesArray.forEach((p) => {
-            //The latitude and longitude in the places object is stored as a string in MongoDB
+    const addMarkers = (mapObj, entriesArray = []) => {
+        entriesArray.forEach((entry) => {
+            //The latitude and longitude in the entries object is stored as a string in MongoDB
             //but the marker method takes an array of nums, I think. So, we parse.
-            if (!p.hasOwnProperty('coordinates') || !p.coordinates ) return;
-            
-            const coordinates = p.coordinates.map((latlong) => {
-                return parseFloat(latlong)
-            })
-
+            if (!entry.hasOwnProperty('place') || !entry.place.coordinates ) return;
             const newMarker = new google.maps.Marker({
                 position: {
-                    lat: coordinates[0], lng: coordinates[1],
+                    lat: entry.place.coordinates.lat, lng: entry.place.coordinates.lng,
                 },
                 map: mapObj
             })
 
             newMarker.addListener('click', () => {
-                console.log('Setting selected place to ', p)
-                setSelected(p)
-                navigate(`/posts/${p._id}`)
+                console.log('Setting selected place to ', entry)
+                setSelected(entry)
+                navigate(`/posts/${entry._id}`)
             })
 
             // myRepeatingMarkers.addMarker(newMarker)
@@ -50,13 +45,13 @@ export const GoogleMap = ({ places, setSelected }) => {
 
             setMap(googleMap)
         }
-    }, [places])
+    }, [entries])
     
     useEffect(() => {
-        console.log('adding markers ', places)
-        addMarkers(googleMap, places)
+        console.log('adding markers ', entries)
+        addMarkers(googleMap, entries)
         
-    }, [googleMap, places])
+    }, [googleMap, entries])
 
     return (
         <div id="map"></div>

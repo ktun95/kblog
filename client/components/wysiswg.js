@@ -59,7 +59,7 @@ const PlaceDialog = ({
     }
 
     const handleChange = (e, val) => {
-        setSelected(val)
+        if (val) setSelected(val)
     }
     
     useEffect(() => {
@@ -75,12 +75,8 @@ const PlaceDialog = ({
             <DialogTitle>Place</DialogTitle>
             <DialogContent>
                 <Autocomplete
-                    autoFocus
-                    // margin="dense"
                     // id="name"
                     label="Place"
-                    // type="email"
-                    // autoComplete='off'
                     freeSolo={true}
                     // size={medium}
                     // variant="standard"
@@ -89,8 +85,8 @@ const PlaceDialog = ({
                     onInputChange={handleInputChange}
                     onChange={handleChange}
                     options={predictions || []}
-                    getOptionLabel={options => options.description}
-                    renderInput={(params) => <TextField {...params} fullWidth label="Place" variant="standard" />}
+                    getOptionLabel={options => options.description || searchString}
+                    renderInput={(params) => <TextField {...params} autoFocus fullWidth label="Place" variant="standard" />}
                 />
                 {/* <IconButton>
                     <Map />
@@ -108,7 +104,7 @@ const PlaceDialog = ({
     )
 }
 
-export const WritePage = ({ entry = {}, initialDialogState = false }) => {
+export const WritePage = ({ entry = {}, setEntries, initialDialogState = false }) => {
     
     const dialogActions = {
         'save': { ACTION_TITLE: 'Save', ACTION_ICON: Save },
@@ -146,17 +142,27 @@ export const WritePage = ({ entry = {}, initialDialogState = false }) => {
     }
     
     const handleConfirmPlace = async (placeObj) => {
+        const newPlace = {
+            full_address: placeObj.description
+        }
+
         const geocoder = new google.maps.Geocoder()
-        const geocode = await geocoder.geocode({placeId: placeObj.place_id})
-        const data = geocode.results[0]
+
+        try {
+            const geocode = await geocoder.geocode({placeId: placeObj.place_id})
+            const data = geocode.results[0]
+            
+            newPlace.address_components = data.address_components
+            newPlace.formatted_address = data.formatted_address
+            newPlace.coordinates = {lat: data.geometry.location.lat(), lng: data.geometry.location.lng()}
+            
+            setPlace(newPlace)
+            handleClosePlaceDialog()
+        } catch (err) {
+            console.error(err)
+        } 
         
-        data.full_address = placeObj.description
-        data.geometry.location.lat = data.geometry.location.lat()
-        data.geometry.location.lng = data.geometry.location.lng()
-        
-        console.log(data)
-        setPlace(data)
-        handleClosePlaceDialog()
+        // data.geometry.location.lat = data.geometry.location.lat()
     }
 
     const handleCloseDialog = () => {
@@ -176,13 +182,12 @@ export const WritePage = ({ entry = {}, initialDialogState = false }) => {
             publish
         }
         
-        console.log(newEntry)
         const req = await axios({
             method: 'post',
             url: '/api/posts',
             data: newEntry
         })
-
+        setEntries( prevEntries => [...prevEntries, newEntry])
         handleCloseDialog()
         console.log(req)
     }
@@ -202,7 +207,7 @@ export const WritePage = ({ entry = {}, initialDialogState = false }) => {
                         placeholder="Untitled"
                         >    
                     </input>
-                    <a onClick={handlePlaceModal} style={{alignSelf: 'center', textDecoration: 'underline'}}>{ place.full_address || 'Choose Place'}</a>
+                    <a href="javascript:void(0)" onClick={handlePlaceModal} style={{alignSelf: 'center', textDecoration: 'underline'}}>{ place.full_address || 'Choose Place'}</a>
                 </div>
                 <PlaceDialog
                     open={openPlaceDialog}

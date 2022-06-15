@@ -50,7 +50,7 @@ export const Main = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [selected, setSelected] = useState({})
     const [isWriteMode, setIsWriteMode] = useState(false)
-    const [places, setPlaces] = useState([])
+    const [entries, setEntries] = useState([])
     let navigate = useNavigate()
 
     const toggleMap = (bool) => {
@@ -79,7 +79,7 @@ export const Main = () => {
                 method: 'get',
                 url: '/api/posts/all'
             })
-            setPlaces(posts.data) 
+            setEntries(posts.data) 
         }
         getPosts()
     }, [])
@@ -97,15 +97,6 @@ export const Main = () => {
 
     return(
         <React.Fragment>
-            {/* <Header selected={selected} setSelected={setSelected} isWriteMode={isWriteMode} setIsWriteMode={setIsWriteMode} toggleWriteMode={toggleWriteMode} /> */}
-            {/* <Accordion expanded={showMap}>
-                <AccordionSummary expandIcon={<span>V</span>} onClick={() => {setShowMap(!showMap)}}>
-                    MAP
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Map places={places} showMap={showMap} setSelected={setSelected}/>
-                </AccordionDetails>
-            </Accordion> */}
             <MyAppBar toggleDrawer={toggleDrawer} isDrawerOpen={isDrawerOpen} drawerWidth={drawerWidth}/>
             <MyDrawer toggleDrawer={toggleDrawer} isDrawerOpen={isDrawerOpen} drawerWidth={drawerWidth} routes={routes} />
             <Container sx={{
@@ -116,16 +107,16 @@ export const Main = () => {
             }}>
                 <Routes>
                     <Route path='/login' element={<Login />} />                    
-                    <Route path="/new" element={<WritePage />} />
-                    <Route path="/map" element={<GoogleMap places={places} setSelected={setSelected} />} />                            
-                    <Route path="/posts/drafts/" element={<Browse routes={routes} entries={places.filter(entry => !entry.published || entry.published == 'false')} />} />
+                    <Route path="/new" element={<WritePage setEntries={setEntries} />} />
+                    <Route path="/map" element={<GoogleMap entries={entries} setSelected={setSelected} />} />                            
+                    <Route path="/posts/drafts/" element={<Browse routes={routes} entries={entries.filter(entry => !entry.published || entry.published == 'false')} />} />
                     <Route path="/posts/drafts/:postId" element={<Entry />} />
                     <Route path="/posts/:postId" element={<Entry />} />                         
-                    <Route path="/posts/country/:countryCode" element={<Browse routes={routes} entries={places} />} />                         
-                    <Route index element={<GoogleMap places={places} setSelected={setSelected} />} />                            
+                    <Route path="/posts/country/:countryCode" element={<Browse routes={routes} entries={entries} />} />                         
+                    <Route index element={<GoogleMap entries={entries} setSelected={setSelected} />} />                            
                     {/* <Route path="/posts/country/:countryCode/:id" element={<EntryWrite />} />                          */}
                     {/* <Route path="/country/sk/test">
-                        {places.length ? <Entry selected={places[0]} /> : null}
+                        {entries.length ? <Entry selected={entries[0]} /> : null}
                     </Route> */}
                 </Routes>
             </Container>
