@@ -18,7 +18,7 @@ export const MyAppBar = ({toggleDrawer, isDrawerOpen, drawerWidth}) => {
                     color="inherit"
                     onClick={toggleDrawer}
                     sx={{ ...(isDrawerOpen && {display: "none"}) }} > = </Button>
-                <h1>Kady's Travels</h1>
+                <h1>Geoblog</h1>
             </Toolbar>
         </AppBar> 
     )

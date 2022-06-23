@@ -15,20 +15,6 @@ import { Autocomplete,
 import { PublishOutlined, Save, Delete, Map } from '@mui/icons-material'
 import axios from 'axios'
 import '../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
-import {v4 as uuidv4 } from 'uuid'
-// const DraftModal = ({ action, dialogState, setDialogState }) => {
-
-//     const handleClose = () => {
-        
-//     }
-
-//     return (
-//         <Dialog open={dialogState} onClose={handleClose}>
-            
-//         </Dialog>
-//     )
-// }
-
 
 const PlaceDialog = ({
         open,
@@ -40,10 +26,8 @@ const PlaceDialog = ({
     const [searchString, setSearchString] = useState('')
     const [predictions, setPredictions] = useState([])    
     const [selected, setSelected] = useState({})
-    // const sessionToken = uuidv4
     
     const displayPlacePredictions = async (string) => {
-        console.log('displayPlacePredictions')
         
         if (!string || (string && string.length < 1)) return
         
@@ -56,7 +40,6 @@ const PlaceDialog = ({
     }
 
     const handleInputChange = e => {
-        console.log('handle INPUT change', e)
         if (e) setSearchString(e.target.value)
     }
 
@@ -66,10 +49,6 @@ const PlaceDialog = ({
     
     useEffect(() => {
         displayPlacePredictions(searchString)
-        
-        return (
-            console.log(predictions)
-        )
     }, [searchString])
 
     return (
@@ -77,25 +56,16 @@ const PlaceDialog = ({
             <DialogTitle>Place</DialogTitle>
             <DialogContent>
                 <Autocomplete
-                    // id="name"
+                    id="place-prediction"
                     label="Place"
                     freeSolo={true}
-                    // size={medium}
-                    // variant="standard"
-                    // value={searchString}
-                    // inputValue={searchString}
                     onInputChange={handleInputChange}
                     onChange={handleChange}
                     options={predictions || []}
                     getOptionLabel={options => options.description || searchString}
                     renderInput={(params) => <TextField {...params} autoFocus fullWidth label="Place" variant="standard" />}
                 />
-                {/* <IconButton>
-                    <Map />
-                </IconButton> */}
-            {/* <ul>
-                {predictions.map(p => <li>{p.description}</li>)}
-            </ul> */}
+
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClosePlaceDialog}>Cancel</Button>
@@ -115,7 +85,7 @@ async function fetchPostData(id) {
     return req.data
 }
 
-export const WritePage = ({ entry = {}, entries, setEntries, initialDialogState = false }) => {
+export const WritePage = ({ entry = {}, entries, fetchAndSetEntries, initialDialogState = false }) => {
     const dialogActions = {
         'save': { ACTION_TITLE: 'Save', ACTION_ICON: Save },
         'publish': { ACTION_TITLE: 'Publish', ACTION_ICON: PublishOutlined }
@@ -126,21 +96,21 @@ export const WritePage = ({ entry = {}, entries, setEntries, initialDialogState 
     
     //Currently, refreshing on a page with a postId parameter will cause the app to crash due to the initial render having an uninitialized entries state. 
     //The editorState useState call attempts to call createWithContent on undefined, before the post data has a chance to be fetched. This will do for now.
+    //update: Also, even if there are no params, a refresh or direct link to the /write route will attempt to call fetchPostData, except with an argument of 
+    //undefined, resulting in a 500 error code. This is also fine for now.
     (async function() {
         existingEntry = entries.find((entry) => entry._id === postId) || await fetchPostData(postId) || {}
     })()
-
-    console.log(existingEntry)
     
     const [ entryTitle, setEntryTitle ] = useState(existingEntry.title || '')
     const [ currentEntry, setCurrentEntry ] = useState(entry)
-    const [ place, setPlace ] = useState({})
-    const [ editorState, setEditorState ] = useState(existingEntry ? EditorState.createWithContent(convertFromRaw(existingEntry.postContents)) : EditorState.createEmpty() )
+    const [ place, setPlace ] = useState(Object.keys(existingEntry).length ? existingEntry.place : {})
+    const [ editorState, setEditorState ] = useState(Object.keys(existingEntry).length ? EditorState.createWithContent(convertFromRaw(existingEntry.postContents)) : EditorState.createEmpty() )
     const [ openPlaceDialog, setOpenPlaceDialog ] = useState(false)
     const [ openDeleteDialog, setOpenDeleteDialog ] = useState(false)
     const [ openDialog, setOpenDialog ] = useState(initialDialogState)
     const [ dialogAction, setDialogAction ] = useState(dialogActions['save'])
-
+    const navigate = useNavigate()
 
     const handleEditorStateChange = (editorState) => {
         setEditorState( prevState => editorState)
@@ -184,8 +154,7 @@ export const WritePage = ({ entry = {}, entries, setEntries, initialDialogState 
         } catch (err) {
             console.error(err)
         } 
-        
-        // data.geometry.location.lat = data.geometry.location.lat()
+
     }
 
     const handleCloseDialog = () => {
@@ -193,7 +162,6 @@ export const WritePage = ({ entry = {}, entries, setEntries, initialDialogState 
     }
     
     const handleChange = e => {
-        console.log(entryTitle)
         setEntryTitle(e.target.value)
     }
 
@@ -204,22 +172,34 @@ export const WritePage = ({ entry = {}, entries, setEntries, initialDialogState 
             postContents: convertToRaw(editorState.getCurrentContent()),
             publish
         }
+
+        try {
+            console.log(existingEntry)
+            const req = (Object.keys(existingEntry).length ? 
+            await axios({
+                method: 'put',
+                url: `/api/posts/${postId}`,
+                data: newEntryForm
+            }) :
+            await axios({
+                method: 'post',
+                url: '/api/posts',
+                data: newEntryForm
+            }))
+
+            fetchAndSetEntries()            
+            // const newEntryId = postId || req.data.insertedId
+            // const newEntryReq = await axios({
+            //     method: 'get',
+            //     url: `/api/posts/${newEntryId}`
+            // })
+            // const newEntry = newEntryReq.data
+            // setCurrentEntry(newEntry)
+            // setEntries(prevEntries => [...prevEntries, newEntry])
+        } catch (err) {
+            console.error(err)
+        }
         
-        const req = await axios({
-            method: 'post',
-            url: '/api/posts',
-            data: newEntryForm
-        })
-
-        const newEntryId = req.data.insertedId
-
-        const newEntryReq = await axios({
-            method: 'get',
-            url: `/api/posts/${newEntryId}`
-        })
-        const newEntry = newEntryReq.data
-        setCurrentEntry(newEntry)
-        setEntries(prevEntries => [...prevEntries, newEntry])
         handleCloseDialog()
     }
 
@@ -227,10 +207,10 @@ export const WritePage = ({ entry = {}, entries, setEntries, initialDialogState 
         try {
             await axios({
                 method: 'delete',
-                url: `/api/posts/delete/${id}`
+                url: `/api/posts/${id}`
             })
-
-            console.log('Entry successfully deleted.')
+            setOpenDeleteDialog(false)
+            navigate('/posts/country/all')
         } catch (err) {
             console.error(err)
         }
@@ -281,7 +261,7 @@ export const WritePage = ({ entry = {}, entries, setEntries, initialDialogState 
                     </DialogContent>                    
                     <DialogActions>
                         <Button onClick={() => setOpenDeleteDialog(false)}>Cancel</Button>
-                        <Button onClick={() => handleDelete()}> DELETE </Button>
+                        <Button onClick={() => handleDelete(existingEntry._id || postId)}> DELETE </Button>
                     </DialogActions>    
                 </Dialog>
                 <Editor
@@ -290,10 +270,8 @@ export const WritePage = ({ entry = {}, entries, setEntries, initialDialogState 
                     editorClassName='editor' 
                     onEditorStateChange={handleEditorStateChange}
                 />
-                {/* <textarea value={draftToHtml(convertToRaw(editorState.getCurrentContent()))} style={{width: '100%', height: '40rem'}}
-                /> */}
                 <Button startIcon={<Delete />} onClick={() => setOpenDeleteDialog(true)}> Delete </Button>
-                <Button startIcon={<Save />} onClick={handleSaveModal}> Save </Button>
+                <Button startIcon={<Save />} onClick={handleSaveModal}> Save As Draft </Button>
                 <Button startIcon={<PublishOutlined />} onClick={handlePublishModal}> Publish </Button>
         </React.Fragment>
     )

@@ -35,7 +35,7 @@ export const GoogleMap = ({ entries, setSelected }) => {
         
         if (mapElement) {
             googleMap = new google.maps.Map(document.getElementById("map"), {
-                center: { lat: -34.397, lng: 150.644 },
+                center: { lat: 35.179, lng: 129.076 },
                 zoom: 8,
                 restriction: {
                     latLngBounds: {north: 85, south: -85, west: -180, east: 180},

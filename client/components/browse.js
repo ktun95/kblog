@@ -10,19 +10,15 @@ import { Container,
          CardHeader,
          CardMedia } from '@mui/material'
 
-export const Browse = ({ routes, entries }) => {
+export const Browse = ({ routes, entries, setEntries }) => {
+
+    console.log(entries)
     let { countryCode } = useParams()
     let navigate = useNavigate()
     
     const handleClick = (entryId) => {
         navigate(`/posts/${entryId}`, {replace: false} )
     }
-    // const fetchPosts = (uri) => {
-    //     const posts = axios({
-    //         method: 'get',
-    //         url: '/'
-    //     })
-    // }
 
     return(
         <Container>

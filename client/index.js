@@ -15,7 +15,7 @@ const UserContext = createContext(null)
 const theme = createTheme({
     palette: {
         primary: {
-            main: '#ffcc80'
+            main: '#89d9b5'
         }
         // secondary：
     }

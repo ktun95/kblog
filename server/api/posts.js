@@ -116,9 +116,9 @@ router.put('/:id', async (req, res, next) => {
 
     const newEntry = {
         title: req.body.title || 'untitled',
-        coordinates: req.body.coordinates || null,
-        publishDate: req.body.publishDate || null,
-        postContents: req.body.postContents || [],
+        place: req.body.place || null,
+        publishDate: (req.body.publish ? new Date() : null),
+        postContents: req.body.postContents || '',
         images: req.body.images || []
     }
 
@@ -140,7 +140,7 @@ router.delete('/:id', async (req, res, next) => {
         const db = mongoClient.db("tintin")
         const postsCollection = db.collection('posts')
         const deletedPost = await postsCollection.deleteOne({"_id": ObjectID(postId)})
-        res.status(deletedPost)
+        res.sendStatus(200)
     } catch (err) {
         next(err)
     }
