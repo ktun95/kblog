@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Editor } from "react-draft-wysiwyg";
-import { EditorState, convertToRaw } from "draft-js";
+import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import draftToHtml from 'draftjs-to-html';
 import { Autocomplete,
          Button,
@@ -9,7 +10,8 @@ import { Autocomplete,
          Dialog,
          DialogActions,
          DialogContent,
-         DialogTitle } from '@mui/material'
+         DialogTitle,
+         Typography } from '@mui/material'
 import { PublishOutlined, Save, Delete, Map } from '@mui/icons-material'
 import axios from 'axios'
 import '../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
@@ -104,17 +106,38 @@ const PlaceDialog = ({
     )
 }
 
-export const WritePage = ({ entry = {}, setEntries, initialDialogState = false }) => {
-    
+
+async function fetchPostData(id) {
+    const req = await axios({
+        method: 'get',
+        url: `/api/posts/${id}`
+    })
+    return req.data
+}
+
+export const WritePage = ({ entry = {}, entries, setEntries, initialDialogState = false }) => {
     const dialogActions = {
         'save': { ACTION_TITLE: 'Save', ACTION_ICON: Save },
         'publish': { ACTION_TITLE: 'Publish', ACTION_ICON: PublishOutlined }
     }
     
-    const [ entryTitle, setEntryTitle ] = useState(entry.title || '')
+    const {postId} = useParams()
+    let existingEntry = {};
+    
+    //Currently, refreshing on a page with a postId parameter will cause the app to crash due to the initial render having an uninitialized entries state. 
+    //The editorState useState call attempts to call createWithContent on undefined, before the post data has a chance to be fetched. This will do for now.
+    (async function() {
+        existingEntry = entries.find((entry) => entry._id === postId) || await fetchPostData(postId) || {}
+    })()
+
+    console.log(existingEntry)
+    
+    const [ entryTitle, setEntryTitle ] = useState(existingEntry.title || '')
+    const [ currentEntry, setCurrentEntry ] = useState(entry)
     const [ place, setPlace ] = useState({})
-    const [ editorState, setEditorState ] = useState(EditorState.createEmpty())
+    const [ editorState, setEditorState ] = useState(existingEntry ? EditorState.createWithContent(convertFromRaw(existingEntry.postContents)) : EditorState.createEmpty() )
     const [ openPlaceDialog, setOpenPlaceDialog ] = useState(false)
+    const [ openDeleteDialog, setOpenDeleteDialog ] = useState(false)
     const [ openDialog, setOpenDialog ] = useState(initialDialogState)
     const [ dialogAction, setDialogAction ] = useState(dialogActions['save'])
 
@@ -175,27 +198,43 @@ export const WritePage = ({ entry = {}, setEntries, initialDialogState = false }
     }
 
     const handleSubmit = async ({ publish = false }) => {
-        const newEntry = {
+        const newEntryForm = {
             title: entryTitle,
             place,
-            postContents: draftToHtml(convertToRaw(editorState.getCurrentContent())),
+            postContents: convertToRaw(editorState.getCurrentContent()),
             publish
         }
         
         const req = await axios({
             method: 'post',
             url: '/api/posts',
-            data: newEntry
+            data: newEntryForm
         })
-        setEntries( prevEntries => [...prevEntries, newEntry])
+
+        const newEntryId = req.data.insertedId
+
+        const newEntryReq = await axios({
+            method: 'get',
+            url: `/api/posts/${newEntryId}`
+        })
+        const newEntry = newEntryReq.data
+        setCurrentEntry(newEntry)
+        setEntries(prevEntries => [...prevEntries, newEntry])
         handleCloseDialog()
-        console.log(req)
     }
 
-    // useEffect(() => {
-    //     console.dir(convertToRaw(editorState.getCurrentContent()))
-    //     console.dir(editorState.getCurrentContent())
-    // })
+    const handleDelete = async id => {
+        try {
+            await axios({
+                method: 'delete',
+                url: `/api/posts/delete/${id}`
+            })
+
+            console.log('Entry successfully deleted.')
+        } catch (err) {
+            console.error(err)
+        }
+    }
 
     return(
         <React.Fragment>
@@ -221,10 +260,7 @@ export const WritePage = ({ entry = {}, setEntries, initialDialogState = false }
                     <DialogContent>
                         <TextField
                             autoFocus
-                            // margin="dense"
-                            // id="name"
                             label="Title"
-                            // type="email"
                             fullWidth
                             variant="standard"
                             value={entryTitle}
@@ -236,6 +272,18 @@ export const WritePage = ({ entry = {}, setEntries, initialDialogState = false }
                         <Button onClick={() => handleSubmit(dialogAction.ACTION_TITLE === 'Publish' ? {publish: true} : {publish: false})}>{dialogAction.ACTION_TITLE}</Button>
                     </DialogActions>    
                 </Dialog>
+                <Dialog open={openDeleteDialog} onClose={() => setOpenDeleteDialog(false)}>
+                    <DialogTitle> Delete </DialogTitle>
+                    <DialogContent>
+                        <Typography>
+                            Are you sure you want to delete this post?
+                        </Typography>
+                    </DialogContent>                    
+                    <DialogActions>
+                        <Button onClick={() => setOpenDeleteDialog(false)}>Cancel</Button>
+                        <Button onClick={() => handleDelete()}> DELETE </Button>
+                    </DialogActions>    
+                </Dialog>
                 <Editor
                     editorState={editorState}
                     wrapperClassName='editor-wrapper'
@@ -244,7 +292,7 @@ export const WritePage = ({ entry = {}, setEntries, initialDialogState = false }
                 />
                 {/* <textarea value={draftToHtml(convertToRaw(editorState.getCurrentContent()))} style={{width: '100%', height: '40rem'}}
                 /> */}
-                <Button startIcon={<Delete />}> Delete </Button>
+                <Button startIcon={<Delete />} onClick={() => setOpenDeleteDialog(true)}> Delete </Button>
                 <Button startIcon={<Save />} onClick={handleSaveModal}> Save </Button>
                 <Button startIcon={<PublishOutlined />} onClick={handlePublishModal}> Publish </Button>
         </React.Fragment>

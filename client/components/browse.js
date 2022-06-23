@@ -26,7 +26,7 @@ export const Browse = ({ routes, entries }) => {
 
     return(
         <Container>
-            <h2>{Object.keys(routes)}</h2>
+            <h2>{Object.keys(routes['Country'])}</h2>
             <Stack spacing={1}>
                 {entries.map((entry, idx) => {
                     return (

@@ -10,7 +10,7 @@ export const GoogleMap = ({ entries, setSelected }) => {
         entriesArray.forEach((entry) => {
             //The latitude and longitude in the entries object is stored as a string in MongoDB
             //but the marker method takes an array of nums, I think. So, we parse.
-            if (!entry.hasOwnProperty('place') || !entry.place.coordinates ) return;
+            if (!entry.hasOwnProperty('place') || !entry.place || !entry.place.coordinates ) return;
             const newMarker = new google.maps.Marker({
                 position: {
                     lat: entry.place.coordinates.lat, lng: entry.place.coordinates.lng,

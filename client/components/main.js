@@ -35,9 +35,9 @@ const routes = {
     "Map": '/map',
     "Country": {
         "All": 'posts/country/all',
-        "South Korea": 'posts/country/korea',
-        "USA": 'posts/country/usa',
-        "China": 'posts/country/china',
+        // "South Korea": 'posts/country/korea',
+        // "USA": 'posts/country/usa',
+        // "China": 'posts/country/china',
     }
 }
 
@@ -107,11 +107,11 @@ export const Main = () => {
             }}>
                 <Routes>
                     <Route path='/login' element={<Login />} />                    
-                    <Route path="/new" element={<WritePage setEntries={setEntries} />} />
+                    <Route path="/write/:postId" element={<WritePage entries={entries} setEntries={setEntries} />} />
                     <Route path="/map" element={<GoogleMap entries={entries} setSelected={setSelected} />} />                            
                     <Route path="/posts/drafts/" element={<Browse routes={routes} entries={entries.filter(entry => !entry.published || entry.published == 'false')} />} />
                     <Route path="/posts/drafts/:postId" element={<Entry />} />
-                    <Route path="/posts/:postId" element={<Entry />} />                         
+                    <Route path="/posts/:postId" element={<Entry entries={entries} />} />                         
                     <Route path="/posts/country/:countryCode" element={<Browse routes={routes} entries={entries} />} />                         
                     <Route index element={<GoogleMap entries={entries} setSelected={setSelected} />} />                            
                     {/* <Route path="/posts/country/:countryCode/:id" element={<EntryWrite />} />                          */}
@@ -123,16 +123,3 @@ export const Main = () => {
         </React.Fragment>
     )
 };
-
-// const exampleEntry = {
-//     _id: "04235097",
-//     title: "Example Entry",
-//     location: {
-//         country: "South Korea",
-//         coordinates: [37.53, 127.02],
-//     },
-//     contents: "
-
-//     "
-// }
-

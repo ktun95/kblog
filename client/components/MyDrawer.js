@@ -26,7 +26,7 @@ export const MyDrawer = props => {
             <ListItemButton sx={{flexGrow: 0, justifyContent: "flex-end"}}  key="Drafts" onClick={() => navigate('/posts/drafts')}>
                 <ListItemText primary="Drafts" key="Drafts" />
             </ListItemButton>
-            <ListItemButton sx={{flexGrow: 0, justifyContent: "flex-end"}}  key="New" onClick={() => navigate('/new')}>
+            <ListItemButton sx={{flexGrow: 0, justifyContent: "flex-end"}}  key="New" onClick={() => navigate('/write')}>
                 <ListItemText primary="New+" key="New" />
             </ListItemButton>
 
