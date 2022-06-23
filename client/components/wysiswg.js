@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
-import draftToHtml from 'draftjs-to-html';
 import { Autocomplete,
          Button,
          IconButton,
@@ -77,13 +76,13 @@ const PlaceDialog = ({
 }
 
 
-async function fetchPostData(id) {
-    const req = await axios({
-        method: 'get',
-        url: `/api/posts/${id}`
-    })
-    return req.data
-}
+// async function fetchPostData(id) {
+//     const req = await axios({
+//         method: 'get',
+//         url: `/api/posts/${id}`
+//     })
+//     return req.data
+// }
 
 export const WritePage = ({ entry = {}, entries, fetchAndSetEntries, initialDialogState = false }) => {
     const dialogActions = {
@@ -99,7 +98,7 @@ export const WritePage = ({ entry = {}, entries, fetchAndSetEntries, initialDial
     //update: Also, even if there are no params, a refresh or direct link to the /write route will attempt to call fetchPostData, except with an argument of 
     //undefined, resulting in a 500 error code. This is also fine for now.
     (async function() {
-        existingEntry = entries.find((entry) => entry._id === postId) || await fetchPostData(postId) || {}
+        existingEntry = entries.find((entry) => entry._id === postId) || {}
     })()
     
     const [ entryTitle, setEntryTitle ] = useState(existingEntry.title || '')
@@ -174,7 +173,6 @@ export const WritePage = ({ entry = {}, entries, fetchAndSetEntries, initialDial
         }
 
         try {
-            console.log(existingEntry)
             const req = (Object.keys(existingEntry).length ? 
             await axios({
                 method: 'put',
@@ -188,14 +186,7 @@ export const WritePage = ({ entry = {}, entries, fetchAndSetEntries, initialDial
             }))
 
             fetchAndSetEntries()            
-            // const newEntryId = postId || req.data.insertedId
-            // const newEntryReq = await axios({
-            //     method: 'get',
-            //     url: `/api/posts/${newEntryId}`
-            // })
-            // const newEntry = newEntryReq.data
-            // setCurrentEntry(newEntry)
-            // setEntries(prevEntries => [...prevEntries, newEntry])
+
         } catch (err) {
             console.error(err)
         }

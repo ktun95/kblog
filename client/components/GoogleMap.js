@@ -19,7 +19,6 @@ export const GoogleMap = ({ entries, setSelected }) => {
             })
 
             newMarker.addListener('click', () => {
-                console.log('Setting selected place to ', entry)
                 setSelected(entry)
                 navigate(`/posts/${entry._id}`)
             })
@@ -48,7 +47,6 @@ export const GoogleMap = ({ entries, setSelected }) => {
     }, [entries])
     
     useEffect(() => {
-        console.log('adding markers ', entries)
         addMarkers(googleMap, entries)
         
     }, [googleMap, entries])

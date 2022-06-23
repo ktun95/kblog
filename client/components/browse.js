@@ -11,8 +11,6 @@ import { Container,
          CardMedia } from '@mui/material'
 
 export const Browse = ({ routes, entries, setEntries }) => {
-
-    console.log(entries)
     let { countryCode } = useParams()
     let navigate = useNavigate()
     

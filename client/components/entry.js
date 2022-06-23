@@ -4,7 +4,8 @@ import { Button } from '@mui/material'
 import { useParams } from 'react-router-dom'
 import htmlToDraft from 'html-to-draftjs'
 import draftToHtml from 'draftjs-to-html'
-import ReactHtmlParser from 'react-html-parser'
+// import ReactHtmlParser from 'react-html-parser'
+import HtmlReactParser from 'html-react-parser'
 import axios from 'axios'
 
 // import htmlToDraft from 'html-to-draftjs'
@@ -32,7 +33,7 @@ export const Entry = ({ entries }) => {
         (async function() {
             selectedEntry = entries.find((entry) => entry._id === postId) || await fetchPostData(postId)
             const html = draftToHtml(selectedEntry.postContents)
-            setJsx(ReactHtmlParser(html))
+            setJsx(HtmlReactParser(html))
         })()
     }, [])
 
