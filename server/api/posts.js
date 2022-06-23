@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const { mongoClient, ObjectID } = require('../db')
-
+const { dbName } = require('../config')
 // Client.connect()
 //put connection check middleware here?
 // MongoClient instance has an isConnected method 
@@ -90,7 +90,7 @@ router.post('/', async (req, res, next) => {
     }
 
     try {
-        const db = mongoClient.db("tintin")
+        const db = mongoClient.db(dbName)
         const postsCollection = db.collection('posts')
         const newPost = await postsCollection.insertOne(newEntry)
         console.log(`${newPost.insertedCount} documents were inserted with the _id: ${newPost.insertedId}`)
@@ -123,7 +123,7 @@ router.put('/:id', async (req, res, next) => {
     }
 
     try {
-        const db = mongoClient.db("tintin")
+        const db = mongoClient.db(dbName)
         const postsCollection = db.collection('posts')
         const updatedPost = await postsCollection.updateOne({"_id": ObjectID(postId)}, {$set: newEntry})
         res.send(updatedPost)   
@@ -137,7 +137,7 @@ router.delete('/:id', async (req, res, next) => {
     const postId = req.params.id
 
     try {
-        const db = mongoClient.db("tintin")
+        const db = mongoClient.db(dbName)
         const postsCollection = db.collection('posts')
         const deletedPost = await postsCollection.deleteOne({"_id": ObjectID(postId)})
         res.sendStatus(200)
