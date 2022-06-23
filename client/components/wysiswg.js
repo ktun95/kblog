@@ -201,6 +201,7 @@ export const WritePage = ({ entry = {}, entries, fetchAndSetEntries, initialDial
                 url: `/api/posts/${id}`
             })
             setOpenDeleteDialog(false)
+            fetchAndSetEntries()
             navigate('/posts/country/all')
         } catch (err) {
             console.error(err)
