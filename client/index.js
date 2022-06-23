@@ -24,9 +24,7 @@ const theme = createTheme({
 
 
 const App = () => {
-    //replace with context later maybe, don't forget to make
     const [user, setUser] = useState('')  
-    //corresponding change in the useEffect
     
     useEffect(() => {
         async function fetchUser() {
